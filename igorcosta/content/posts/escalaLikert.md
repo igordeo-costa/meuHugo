@@ -1,5 +1,6 @@
 ---
 title: "Tratamento de dados de Escala Likert"
+tags: ["Dados ordinais", "Regressão", "Ibex Farm"]
 date: 2021-04-01T23:05:39-03:00
 ---
 
@@ -14,17 +15,18 @@ Nosso objetivo é mostrar como fazer um tratamento preliminar de dados de escala
 
 Ao final, você deve conseguir um resultado como esse:
 
-![Gráfico de barras empilhadas e de previsão de probabilidades.](/static/GráficoFinal.png)
+![Gráfico de barras empilhadas e previsão de probabilidades.](/graficofinal.png)
 
 Esse artigo assume que você conhece os comandos básicos do R, como manipular dados, como instalar e carregar pacotes além de outras funcionalidades semelhantes. Nosso objetivo não é dar informações detalhadas sobres interpretação dos dados, mas apenas ilustrar como investigá-los com o R.
 
 ### O experimento
-O experimento mensurava o julgamento de falantes em uma escala com 5 níveis, indo de 1 = discordo totalmente até 5 = concordo totalmente. Os fatores preditivos eram ordem dos quatificadores em uma sentença (um-todo e todo-um) e número de um pronome anafórico na sentença seguinte (singular e plural). Dois exemplos de frases são dados abaixo:
+O experimento mensurava o julgamento de falantes em uma escala com 5 níveis, indo de 1 = discordo totalmente até 5 = concordo totalmente. Os fatores preditivos eram ordem dos quatificadores em uma sentença (um-todo e todo-um) e número de um pronome anafórico na sentença seguinte (singular e plural). Dois exemplos esquemáticos de frases são dados abaixo:
 
-...mostrou uma camisa... para todo comprador...
-...mostrou toda camisa... para um comprador...
+...mostrou **uma** camisa... para **todo** comprador...
 
-Os dados usados nesse tutorial podem ser baixados [aqui](). Os nomes e e-mails dos participantes foram alterados para preservar suas identidades.
+...mostrou **toda** camisa... para **um** comprador...
+
+Os dados usados nesse tutorial podem ser baixados [aqui](). Os nomes e e-mails dos participantes foram alterados para preservar suas identidades. Uma descrição mais detalhada do experimento pode ser encontrada [aqui]().
 
 # Carregando os dados de um arquivo ibex
 
@@ -172,6 +174,20 @@ colnames(porc_horiz) <- c("Ordem", "Num", "Discordo_Totalmente", "Discordo", "Ne
 
 write.csv(porc_horiz, "porcentagens.csv")
 ```
+Seu resultado será parecido com isso:
+
+```{r}
+> porc_horiz
+# A tibble: 4 x 7
+# Groups:   Ordem, Num [4]
+  Ordem   Num   Discordo_Totalmente Discordo Neutro Concordo Concordo_Totalmente
+  <fct>   <fct>               <dbl>    <dbl>  <dbl>    <dbl>               <dbl>
+1 todo-um PL                  52.3     24.2    6.71     9.06                7.72
+2 todo-um SG                   9.18     8.50  13.6     18.0                50.7
+3 um-todo PL                  21.4      8.44  13.6     21.4                35.1
+4 um-todo SG                   6.69     4.01  11.0     17.7                60.5
+```
+
 Esses já são nossos dados finais, mas, para colocá-los em um gráfico de barras empilhadas, vamos precisar fazer algumas manipulações com eles. O princípio será o seguinte: dividir os dados ao meio, de modo que um conjunto contenha os dados da parte baixa da escala, ou seja, discordo totalmente e discordo; e outro conjunto contenha os dados da parte de cima da escala, ou seja, concordo e concordo totamente. Além disso, quanto ao meio da escala (o julgamento Neutro), temos que colocar metade dele abaixo e metade dele acima da escala.
 
 Primeiro, vamos dividir o meio da escala (os julgamentos "Neutro"):
@@ -204,7 +220,7 @@ legend_pal<-c("#2B83BA", "#ABDDA4", "#FFFFBF", "#FFFFBF", "#FDAE61", "#D7191C") 
 legend_pal <- gsub("#FFFFBF", "#9C9C9C", legend_pal) # Substituir a cor do meio por um cinza
 names(legend_pal) <- c("Concordo_Totalmente", "Concordo", "c1", "c2", "Discordo", "Discordo_Totalmente") # Atribuir nomes às cores
 ```
-Com isso, podemos produzir o gráfico. Retire o comentário de `coord_flip` se quiser ver o gráfico por um outro ângulo.
+Com isso, podemos produzir o gráfico, o mesmo que está no Painel 1 no innício deste post. Retire o comentário de `coord_flip` se quiser ver o gráfico por um outro ângulo.
 
 ```{r}
 ggplot() +
@@ -299,10 +315,13 @@ fixos.m %>%
           subtitle = "Intervalos que não contêm zero são estatisticamente significativos") +
   coord_flip()+theme_classic()
 ```
+O resultado será mais ou menos assim:
+
+![Gráfico de efeitos fixos do modelo.](/efeitosfixos.png)
 
 ### Calculando a previsão de probabilidades
 
-Em geral, a menos que você seja um entendedor do assunto (e, portanto, nem estaria por aqui), esses coeficientes são difíceis de interpretar e, para dados ordinais, o melhor é extrair do modelo a "previsão de probabilidades" para os dados utilizados ou para um novo conjunto de dados. Vamos usar para isso o pacote `sjPlot` (documentação [aqui](https://cran.r-project.org/web/packages/sjPlot/vignettes/plot_marginal_effects.html) e investigar os chamados "efeitos marginais".
+Em geral, a menos que você seja um entendedor do assunto (e, portanto, nem estaria por aqui), esses coeficientes são difíceis de interpretar e, para dados ordinais, o melhor é extrair do modelo a "previsão de probabilidades" para os dados utilizados ou para um novo conjunto de dados. Vamos usar para isso o pacote `sjPlot` (documentação [aqui](https://cran.r-project.org/web/packages/sjPlot/vignettes/plot_marginal_effects.html)) e investigar os chamados "efeitos marginais".
 
 ```{r}
 model_data<-get_model_data(m2,
@@ -364,4 +383,4 @@ model_data %>%
   guides(colour = guide_legend(reverse=T)) # Apenas organizando a ordem da legenda.
 ```
 
-Pronto, finalmente acabamos!
+Pronto, finalmente acabamos! O resultado final será composto pelos dois gráficos disponíveis no início desse post, colocados um abaixo do outro para facilitar a comparação entre os dados descritivos (Painel 1) e os dados inferenciais (Painel 2).

@@ -24,8 +24,10 @@ paginate = 8
 
 [params]
   author = "Igor Costa"
-  description = "Doutorando em Estudos da Linguagem - PUC-Rio."
+  description = "Doutorando em Estudos da Linguagem - Lapal/PUC-Rio."
   menu_item_separator = " - "
+  avatar = "avatar.png"
+
   [[params.social]]
     icon = "github"
     name = "Github"
