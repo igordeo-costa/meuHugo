@@ -1,9 +1,8 @@
 ---
-title: "Tratando dados de Escala Likert"
-author: "Igor Costa"
-date: "30/03/2021"
-output: html_document
+title: "EscalaLikert"
+date: 2021-04-01T23:05:39-03:00
 ---
+
 # Preliminares
 Nosso objetivo é mostrar como fazer um tratamento preliminar de dados de escala do tipo Likert usando o R. Nosso caminho será:
 
@@ -11,7 +10,7 @@ Nosso objetivo é mostrar como fazer um tratamento preliminar de dados de escala
 
 2. Em seguida, faremos uma breve investigação descritiva dos dados, mostrando como construir um gráfico útil para publicar essas informações.
 
-3. Por fim, faremos uma análie desses dados com um modelo bayesiano com o pacote `brms`. 
+3. Por fim, faremos uma análie desses dados com um modelo bayesiano com o pacote `brms`.
 
 Esse artigo assume que você conhece os comandos básicos do R, como manipular dados, como instalar pacotes e outras funcionalidades semelhantes.
 
@@ -112,7 +111,7 @@ require(scales)
 ```
 ## Filtragens iniciais
 
-Se você quiser (e achamos que deveria), pode dar uma olhada nos dados com a função `str`. A partir disso, vamos fazer algumas tranformações nos dados, transformando as colunas do tipo caractere (`chr`) em funções do tipo fator (`Factor`). A coluna `answer` será, por sua vez, do tipo ordenada (`ordered factor`), já que é a resposta dada à escala do tipo Likert. 
+Se você quiser (e achamos que deveria), pode dar uma olhada nos dados com a função `str`. A partir disso, vamos fazer algumas tranformações nos dados, transformando as colunas do tipo caractere (`chr`) em funções do tipo fator (`Factor`). A coluna `answer` será, por sua vez, do tipo ordenada (`ordered factor`), já que é a resposta dada à escala do tipo Likert.
 
 ```{r}
 dados<-dados %>%
@@ -140,7 +139,7 @@ contag <- dados %>%
   tally() %>%
   group_by(Ordem, Num) %>%
   spread(answer, n)
-  
+
 colnames(contag) <- c("Ordem", "Num", "Discordo_Totalmente", "Discordo", "Neutro", "Concordo", "Concordo_Totalmente")
 
 write.csv(contag, "contagens.csv")
@@ -188,7 +187,7 @@ meio_baixo <- dados_meio %>%
 Com isso, você já poderia plotar os dados com o `ggplot2`, mas vamos estabelecer uma paleta de cores mais interessante para os dados. Você pode investigar as diversas paletas de cores do pacote `RColorBrewer` apenas [buscando no Google](https://www.r-graph-gallery.com/38-rcolorbrewers-palettes.html) pelo nome do pacote.
 
 ```{r}
-legend_pal <- brewer.pal(name = "Spectral", n = 5) # Usar, do pacote RColorBrewer, a paleta de cores "spectral", com 5 cores 
+legend_pal <- brewer.pal(name = "Spectral", n = 5) # Usar, do pacote RColorBrewer, a paleta de cores "spectral", com 5 cores
 legend_pal<-c("#2B83BA", "#ABDDA4", "#FFFFBF", "#FFFFBF", "#FDAE61", "#D7191C") # Duplica a cor do meio manualmente
 legend_pal <- gsub("#FFFFBF", "#9C9C9C", legend_pal) # Substituir a cor do meio por um cinza
 names(legend_pal) <- c("Concordo_Totalmente", "Concordo", "c1", "c2", "Discordo", "Discordo_Totalmente") # Atribuir nomes às cores
@@ -196,19 +195,19 @@ names(legend_pal) <- c("Concordo_Totalmente", "Concordo", "c1", "c2", "Discordo"
 Com isso, podemos produzir o gráfico. Retire o comentário de `coord_flip` se quiser ver o gráfico por um outro ângulo.
 
 ```{r}
-ggplot() + 
+ggplot() +
     geom_bar(data = meio_alto, aes(x = Num, y=perc, fill = answer), stat="identity") +
-    geom_bar(data = meio_baixo, aes(x = Num, y=-perc, fill = answer), stat="identity") + 
+    geom_bar(data = meio_baixo, aes(x = Num, y=-perc, fill = answer), stat="identity") +
     geom_hline(yintercept = 0, color =c("black")) +
     facet_wrap(~Ordem)+
-    scale_fill_manual(values = legend_pal, 
+    scale_fill_manual(values = legend_pal,
                       breaks = c("Concordo_Totalmente", "Concordo", "c2", "Discordo", "Discordo_Totalmente"),
                       labels = c("Concordo_Totalmente", "Concordo", "Neutro", "Discordo", "Discordo_Totalmente")) +
     scale_y_continuous(breaks = seq(from=-100, to=100, by=20))+
     #coord_flip() +
-    labs(x = "", y = "Porcentagem de Respostas (%)", fill="Respostas") + 
+    labs(x = "", y = "Porcentagem de Respostas (%)", fill="Respostas") +
     ggtitle("Painel 1: Distribuição percentual dos julgamentos na amostra",
-            subtitle = "Barras empilhadas somam 100% cada") + 
+            subtitle = "Barras empilhadas somam 100% cada") +
     theme_classic()
 ```
 
@@ -277,7 +276,7 @@ fixos.m %>%
                 position=position_dodge(.9))+
   geom_point(color="orange")+
   scale_x_discrete(labels=c("ORDEM: todo_um", "NÚMERO: Singular", "INTERAÇÃO: ordem x número"))+ # ao mudar a ordem é preciso mudar aqui
-  labs(y = "LogOdds", x = "") + 
+  labs(y = "LogOdds", x = "") +
   ggtitle("Coeficientes estimados e intervalos de credibilidade (0.95)",
           subtitle = "Intervalos que não contêm zero são estatisticamente significativos") +
   coord_flip()+theme_classic()
@@ -322,8 +321,8 @@ model_data %>%
                      labels = scales::number_format(accuracy = 0.01))+
   # scale_colour_manual(values=paleta,
   #                    labels=c("Discordo_Totalmente", "Discordo", "Neutro", "Concordo", "Concordo_Totalmente"))+
-  labs(x = "Número da anáfora", y = "Probabilidades preditas", fill="Respostas")+ 
-  ggtitle("Previsão de probabilidades estimada pelo modelo de regressão ordinal")+ 
+  labs(x = "Número da anáfora", y = "Probabilidades preditas", fill="Respostas")+
+  ggtitle("Previsão de probabilidades estimada pelo modelo de regressão ordinal")+
   theme_classic()+
   guides(colour = guide_legend(reverse=T)) # Apenas organizando a ordem da legenda.
 
@@ -338,12 +337,11 @@ model_data %>%
                      labels = scales::number_format(accuracy = 0.01))+
   scale_colour_manual(values=paleta,
                       labels=c("Discordo_Totalmente", "Discordo", "Neutro", "Concordo", "Concordo_Totalmente"))+
-  labs(x = "Número da anáfora", y = "Probabilidades preditas", fill="Respostas")+ 
+  labs(x = "Número da anáfora", y = "Probabilidades preditas", fill="Respostas")+
   ggtitle("Painel 2: Previsão de probabilidades estimada pelo modelo",
-          subtitle = "Linhas verticais indicam intervalos de credibilidade preditos.")+ 
+          subtitle = "Linhas verticais indicam intervalos de credibilidade preditos.")+
   theme_classic()+
   guides(colour = guide_legend(reverse=T)) # Apenas organizando a ordem da legenda.
 ```
 
 Pronto, finalmente acabamos!
-

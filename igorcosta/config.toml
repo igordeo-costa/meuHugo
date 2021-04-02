@@ -2,3 +2,31 @@ baseURL = "https://igordeo-costa.github.io/"
 languageCode = "en-us"
 title = "Igor Costa"
 theme = "m10c"
+
+paginate = 8
+
+[menu]
+  [[menu.main]]
+    identifier = "home"
+    name = "Home"
+    url = "/"
+    weight = 1
+  [[menu.main]]
+    identifier = "tags"
+    name = "Tags"
+    url = "/tags/"
+    weight = 2
+  [[menu.main]]
+    identifier = "about"
+    name = "Atuação"
+    url = "/about/"
+    weight = 3
+
+[params]
+  author = "Igor Costa"
+  description = "Doutorando em Estudos da Linguagem - PUC-Rio."
+  menu_item_separator = " - "
+  [[params.social]]
+    icon = "github"
+    name = "Github"
+    url = "https://github.com/igordeo-costa"
