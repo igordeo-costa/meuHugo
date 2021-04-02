@@ -1,0 +1,4 @@
+baseURL = "https://igordeo-costa.github.io/"
+languageCode = "en-us"
+title = "Igor Costa"
+theme = "m10c"

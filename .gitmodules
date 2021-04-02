@@ -1,0 +1,4 @@
+[submodule "igorcosta/public"]
+	path = igorcosta/public
+	url = https://github.com/igordeo-costa/igordeo-costa.github.io.git
+	branch = main
