@@ -1,5 +1,5 @@
 ---
-title: "EscalaLikert"
+title: "Tratamento de dados de Escala Likert"
 date: 2021-04-01T23:05:39-03:00
 ---
 
@@ -8,11 +8,23 @@ Nosso objetivo é mostrar como fazer um tratamento preliminar de dados de escala
 
 1. Inicialmente, mostraremos como extrair os dados de um documento advindo do [Ibex Farm](https://spellout.net/ibexfarm/), fazendo uma pequena limpeza nos dados de modo a torná-los mais palatáveis;
 
-2. Em seguida, faremos uma breve investigação descritiva dos dados, mostrando como construir um gráfico útil para publicar essas informações.
+2. Em seguida, faremos uma breve investigação descritiva dos dados, mostrando como construir uma tabela com contagens e porcentagens para cada nível da escala e como visualizar esses dados com um gráfico útil para publicar essas informações;
 
-3. Por fim, faremos uma análie desses dados com um modelo bayesiano com o pacote `brms`.
+3. Por fim, faremos uma análie desses dados com um modelo de regressão oridinal com o pacote `brms`.
 
-Esse artigo assume que você conhece os comandos básicos do R, como manipular dados, como instalar pacotes e outras funcionalidades semelhantes.
+Ao final, você deve conseguir um resultado como esse:
+
+![Gráfico de barras empilhadas e de previsão de probabilidades.](/static/GráficoFinal.png)
+
+Esse artigo assume que você conhece os comandos básicos do R, como manipular dados, como instalar e carregar pacotes além de outras funcionalidades semelhantes. Nosso objetivo não é dar informações detalhadas sobres interpretação dos dados, mas apenas ilustrar como investigá-los com o R.
+
+### O experimento
+O experimento mensurava o julgamento de falantes em uma escala com 5 níveis, indo de 1 = discordo totalmente até 5 = concordo totalmente. Os fatores preditivos eram ordem dos quatificadores em uma sentença (um-todo e todo-um) e número de um pronome anafórico na sentença seguinte (singular e plural). Dois exemplos de frases são dados abaixo:
+
+...mostrou uma camisa... para todo comprador...
+...mostrou toda camisa... para um comprador...
+
+Os dados usados nesse tutorial podem ser baixados [aqui](). Os nomes e e-mails dos participantes foram alterados para preservar suas identidades.
 
 # Carregando os dados de um arquivo ibex
 
@@ -24,7 +36,7 @@ install.packages("remotes")
 remotes::install_github("antonmalko/ibextor")
 ```
 
-## Carregando pacotes necessários para esse tutorial
+### Carregando pacotes necessários para esse tutorial
 
 ```{r}
 require(stringr)
@@ -33,7 +45,7 @@ require(tidyr)
 require(ibextor)
 ```
 
-## Extraindo resultados de julgamento de aceitabilidade
+### Extraindo resultados de julgamento de aceitabilidade
 
 Para começar, vamos usar a função `get_results_aj` para extrair os dados de nosso interesse. Observe que `aj` vem de `acceptability judgment`, que é o tipo de experimento feito no Ibex nesse caso. Se você estivesse extraindo outro tipo de dado, como de leitura automonitorada, a função seria outra. Consulte a [documentação do pacote](https://github.com/antonmalko/ibextor) para esses casos. Vamos colocar esses dados num objeto de nome `dados` (você pode dar o nome que você quiser). Repare que você precisará colocar o `PATH` adequado no local onde está, no exemplo baixo, `"/home/dados/..."`. Esse é o endereço no seu computador onde o arquivo está guardado, terminando com o nome do arquivo.
 
@@ -52,7 +64,7 @@ dados<-dados %>%
   select(-a) # Remove essa coluna inútil
 ```
 
-## Extraindo os dados dos sujeitos
+### Extraindo os dados dos sujeitos
 
 Para extrair os dados socioeconômicos dos sujeitos, basta usar a função `get_subj_info`, também do `ibextor`. No caso do experimento em questão, além do `PATH` onde o arquivo está armazenado (o mesmo usado anteriormente), vamos passar pela função o argumento `form_name`, já que nosso experimento tinha mais de um formulário. Vamos dar o nome de `sujeitos` a esses dados (como sempre, você pode dar o nome que achar melhor).
 
@@ -72,7 +84,7 @@ dados<-dados %>%
   select(-c(nome, contato)) # E também a coluna "contato" para garantir o sigilo dos sujeitos
 ```
 
-## Extraindo os dados que você julgar necessários
+### Extraindo informações necessárias
 
 Feito isso, você pode extrair os dados que achar necessários, inclusive exportando essa tabela para fora do R para ser publicada em algum lugar. Vamos mostrar algumas possibilidades.
 
@@ -98,7 +110,7 @@ sujeitos %>%
   filter(str_detect(contato, "@")) %>%
   write.csv("lista_emails.csv")
 ```
-# Fazendo uma abordagem descritiva dos dados
+# Abordagem descritiva dos dados
 
 Os pacotes necessários a essa etapa são:
 
@@ -109,7 +121,7 @@ require(RColorBrewer)
 require(tidyr)
 require(scales)
 ```
-## Filtragens iniciais
+### Filtragens iniciais
 
 Se você quiser (e achamos que deveria), pode dar uma olhada nos dados com a função `str`. A partir disso, vamos fazer algumas tranformações nos dados, transformando as colunas do tipo caractere (`chr`) em funções do tipo fator (`Factor`). A coluna `answer` será, por sua vez, do tipo ordenada (`ordered factor`), já que é a resposta dada à escala do tipo Likert.
 
@@ -127,7 +139,7 @@ dados<-dados %>%
   filter(!item == 11) # Seleciona apenas o que não contém (`!=`) 11.
 ```
 
-## Abordagem descritiva
+### Abordagem descritiva por si
 
 Em primeiro lugar, vamos deixar claro que o modo de fazer o gráfico foi primeiramente disponibilizado [neste endereço](https://ourcodingclub.github.io/tutorials/qualitative/). Vale a pena dar uma conferida por lá.
 
@@ -214,6 +226,12 @@ ggplot() +
 Se você quiser, pode fazer o mesmo gráfico para os itens ou mesmo para cada um dos sujeitos. Para isso, basta repetir os passos, desde a produção da tabela de contagens e porcentagens. É um bom exercício para praticar.
 
 # Ajustando um modelo de regressão ordinal aos dados
+Os pacotes necessários a essa etapa são:
+
+```{r}
+require(brms)
+require(sjPlot)
+```
 
 Como a variável resposta desse experimento é de natureza ordinal, ou seja, valores ordenados em uma escala, o modo adequado de analisá-la é com um modelo de regressão ordinal. Há alguns pacotes no `R` que fazem esse serviço. O mais comum deles é o pacote `MASS`, que tem a função `polr` para esse tipo de dado. Um bom exemplo de como fazer uma análise desse tipo pode ser encontrada [neste endereço](https://stats.idre.ucla.edu/r/dae/ordinal-logistic-regression/). O problema é que essa função não nos permite incluir fatores aleatórios ("random factors") no modelo, e, no caso em questão, temos dois fatores aleatórios (`sujeitos` e `itens`).
 
@@ -221,9 +239,9 @@ Uma boa solução, então, seria usar o [pacote ordinal](https://cran.r-project.
 
 A saída parece ser, portanto, apelar para a estratégia de "usar uma bazuca para matar coelhos" e tentar analisar os dados em uma abordagem bayesiana com o pacote `brms`, cuja documentação pode ser encontrada [aqui](https://github.com/paul-buerkner/brms). Há um bom tutorial do próprio autor disponível [aqui](https://journals.sagepub.com/doi/10.1177/2515245918823199).
 
-## Ajustando um modelo máximo
+### Ajustando um modelo máximo
 
-Primeiro, vamos seguir as recomendações de Baar et. al. (2015) e ajustar um modelo máximo aos dados.
+Primeiro, vamos seguir as recomendações de [Baar et. al. (2013)](https://pubmed.ncbi.nlm.nih.gov/24403724/) e ajustar um modelo máximo aos dados.
 
 Mas antes, verifiquemos quais os contrastes dos dados:
 
@@ -281,6 +299,8 @@ fixos.m %>%
           subtitle = "Intervalos que não contêm zero são estatisticamente significativos") +
   coord_flip()+theme_classic()
 ```
+
+### Calculando a previsão de probabilidades
 
 Em geral, a menos que você seja um entendedor do assunto (e, portanto, nem estaria por aqui), esses coeficientes são difíceis de interpretar e, para dados ordinais, o melhor é extrair do modelo a "previsão de probabilidades" para os dados utilizados ou para um novo conjunto de dados. Vamos usar para isso o pacote `sjPlot` (documentação [aqui](https://cran.r-project.org/web/packages/sjPlot/vignettes/plot_marginal_effects.html) e investigar os chamados "efeitos marginais".
 
