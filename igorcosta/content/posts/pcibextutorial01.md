@@ -32,7 +32,7 @@ Vamos começar por um experimento de leitura automonitorada (_self-paced reading
 ### Página de instrução:
 Primeiro, criaremos uma página de instrução igual àquela da imagem abaixo:
 
-![Página de instrução](imagem1.png)
+![Página de instrução](/imagem1.png)
 
 Para isso, vamos usar o seguinte código:
 ```
