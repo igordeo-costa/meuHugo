@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Dados ordinais on Igor Costa</title>
+    <link>https://igordeo-costa.github.io/tags/dados-ordinais/</link>
+    <description>Recent content in Dados ordinais on Igor Costa</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Thu, 01 Apr 2021 23:05:39 -0300</lastBuildDate>
+    
+	<atom:link href="https://igordeo-costa.github.io/tags/dados-ordinais/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Tratamento de dados de Escala Likert</title>
+      <link>https://igordeo-costa.github.io/posts/escalalikert/</link>
+      <pubDate>Thu, 01 Apr 2021 23:05:39 -0300</pubDate>
+      
+      <guid>https://igordeo-costa.github.io/posts/escalalikert/</guid>
+      <description>Preliminares Nosso objetivo é mostrar como fazer um tratamento preliminar de dados de escala do tipo Likert usando o R. Nosso caminho será:
+  Inicialmente, mostraremos como extrair os dados de um documento advindo do Ibex Farm, fazendo uma pequena limpeza nos dados de modo a torná-los mais palatáveis;
+  Em seguida, faremos uma breve investigação descritiva dos dados, mostrando como construir uma tabela com contagens e porcentagens para cada nível da escala e como visualizar esses dados com um gráfico útil para publicar essas informações;</description>
+    </item>
+    
+  </channel>
+</rss>

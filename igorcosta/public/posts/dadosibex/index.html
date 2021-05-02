@@ -1,0 +1,259 @@
+<!doctype html>
+<html lang="en-us">
+  <head>
+    <title>Acessando dados do Ibex e PCIbex com o R // Igor Costa</title>
+    <link rel="shortcut icon" href="/favicon.ico" />
+    <meta charset="utf-8" />
+    <meta name="generator" content="Hugo 0.68.3" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="author" content="Igor Costa" />
+    <meta name="description" content="" />
+    <link rel="stylesheet" href="https://igordeo-costa.github.io/css/main.min.4a7ec8660f9a44b08c4da97c5f2e31b1192df1d4d0322e65c0dbbc6ecb1b863f.css" />
+
+    
+    <meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Acessando dados do Ibex e PCIbex com o R"/>
+<meta name="twitter:description" content="O objetivo deste artigo é mostrar como você pode acessar facilmente os resultados do seu experimento do Ibex Farm ou do PCIbex usando o R, sobretudo com as funcionalidades do pacote stringr para separar em múltiplas colunas as variáveis que compõem as condições experimentais, geralmente disponíveis em uma única coluna.
+Acessando os dados do Ibex Farm Eu já falei um pouquinho aqui sobre acesso aos dados do Ibex Farm. Como disse por lá, a melhor forma, a meu ver, é usar o pacote ibextor, que tem uma função para cada tipo de controlador disponível, ou seja, uma para extrair dados de leitura automonitorada (get_results_ds), sendo o ds uma abreviação de &ldquo;DashedSentence&rdquo;; uma para extrair os dados de julgamento de aceitabilidade (get_results_aj), sendo o aj de &ldquo;AcceptabilityJudgment&rdquo;; uma para extrair os dados de questionários (get_results_q), sendo o q, obviamente, de &ldquo;Question&rdquo;; e uma para extrair os dados de julgamento de aceitabilidade em que o falante moninota a leitura da sentença (get_results_daj), sendo o daj de &ldquo;DashedAcceptabilityJudgment&rdquo; feito com sentença."/>
+
+    <meta property="og:title" content="Acessando dados do Ibex e PCIbex com o R" />
+<meta property="og:description" content="O objetivo deste artigo é mostrar como você pode acessar facilmente os resultados do seu experimento do Ibex Farm ou do PCIbex usando o R, sobretudo com as funcionalidades do pacote stringr para separar em múltiplas colunas as variáveis que compõem as condições experimentais, geralmente disponíveis em uma única coluna.
+Acessando os dados do Ibex Farm Eu já falei um pouquinho aqui sobre acesso aos dados do Ibex Farm. Como disse por lá, a melhor forma, a meu ver, é usar o pacote ibextor, que tem uma função para cada tipo de controlador disponível, ou seja, uma para extrair dados de leitura automonitorada (get_results_ds), sendo o ds uma abreviação de &ldquo;DashedSentence&rdquo;; uma para extrair os dados de julgamento de aceitabilidade (get_results_aj), sendo o aj de &ldquo;AcceptabilityJudgment&rdquo;; uma para extrair os dados de questionários (get_results_q), sendo o q, obviamente, de &ldquo;Question&rdquo;; e uma para extrair os dados de julgamento de aceitabilidade em que o falante moninota a leitura da sentença (get_results_daj), sendo o daj de &ldquo;DashedAcceptabilityJudgment&rdquo; feito com sentença." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://igordeo-costa.github.io/posts/dadosibex/" />
+<meta property="article:published_time" content="2021-04-08T19:37:46-03:00" />
+<meta property="article:modified_time" content="2021-04-08T19:37:46-03:00" />
+
+
+  </head>
+  <body>
+    <header class="app-header">
+      <a href="https://igordeo-costa.github.io/"><img class="app-header-avatar" src="/avatar.png" alt="Igor Costa" /></a>
+      <h1>Igor Costa</h1>
+      <nav class="app-header-menu">
+          <a class="app-header-menu-item" href="/">Home</a>
+             - 
+          
+          <a class="app-header-menu-item" href="/tags/">Tags</a>
+             - 
+          
+          <a class="app-header-menu-item" href="/about/">Atuação</a>
+      </nav>
+      <p>Doutorando em Estudos da Linguagem - Lapal/PUC-Rio.</p>
+      <div class="app-header-social">
+        
+          <a href="https://github.com/igordeo-costa" target="_blank" rel="noreferrer noopener">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-github">
+  <title>Github</title>
+  <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+</svg>
+          </a>
+        
+      </div>
+    </header>
+    <main class="app-container">
+      
+  <article class="post">
+    <header class="post-header">
+      <h1 class ="post-title">Acessando dados do Ibex e PCIbex com o R</h1>
+      <div class="post-meta">
+        <div>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-calendar">
+  <title>calendar</title>
+  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line>
+</svg>
+          Apr 8, 2021
+        </div>
+        <div>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-clock">
+  <title>clock</title>
+  <circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline>
+</svg>
+          11 min read
+        </div>
+        <div>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tag">
+  <title>tag</title>
+  <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line>
+</svg>
+              <a class="tag" href="https://igordeo-costa.github.io/tags/pcibex/">PCIbex</a>
+        </div>
+      </div>
+    </header>
+    <div class="post-content">
+      <p>O objetivo deste artigo é mostrar como você pode acessar facilmente os resultados do seu experimento do <a href="https://spellout.net/ibexfarm/">Ibex Farm</a> ou do <a href="https://doc.pcibex.net/">PCIbex</a> usando o R, sobretudo com as funcionalidades do pacote <a href="https://www.rdocumentation.org/packages/stringr/versions/1.4.0">stringr</a> para separar em múltiplas colunas as variáveis que compõem as condições experimentais, geralmente disponíveis em uma única coluna.</p>
+<h1 id="acessando-os-dados-do-ibex-farm">Acessando os dados do Ibex Farm</h1>
+<p>Eu já falei um pouquinho <a href="https://igordeo-costa.github.io/posts/escalalikert/">aqui</a> sobre acesso aos dados do Ibex Farm. Como disse por lá, a melhor forma, a meu ver, é usar o pacote <a href="https://github.com/antonmalko/ibextor">ibextor</a>, que tem uma função para cada tipo de controlador disponível, ou seja, uma para extrair dados de leitura automonitorada (<code>get_results_ds</code>), sendo o <code>ds</code> uma abreviação de &ldquo;DashedSentence&rdquo;; uma para extrair os dados de julgamento de aceitabilidade (<code>get_results_aj</code>), sendo o <code>aj</code> de &ldquo;AcceptabilityJudgment&rdquo;; uma para extrair os dados de questionários (<code>get_results_q</code>), sendo o <code>q</code>, obviamente, de &ldquo;Question&rdquo;; e uma para extrair os dados de julgamento de aceitabilidade em que o falante moninota a leitura da sentença (<code>get_results_daj</code>), sendo o <code>daj</code> de &ldquo;DashedAcceptabilityJudgment&rdquo; feito com sentença.</p>
+<p>Sendo assim, para tornar os dados de <em>output</em> do Ibex legíveis, basta você usar como argumento para uma dessas funções o <code>PATH</code> do seu arquivo .csv, ou seja, basta dar a localização desse arquivo no seu computador, como no exemplo que dei lá no outro post:</p>
+<pre><code>dados&lt;-get_results_aj(&quot;/home/dados/Acadêmicos/Doutorado/EXPERIMENTOS_2021/EscalaLikert/Resultados.csv&quot;)
+</code></pre><p>E é só! Mais nada! Você não precisa ficar tentando limpar os dados no Excel ou coisa semelhante. Com apenas essa linha de código você já tem uma tabela normal, com cada dado em uma coluna, como mostra o resultado abaixo (não se assuste com a mensagem dada pela função, ela só está dizendo que apagou algumas colunas inúteis):</p>
+<pre><code>&gt; head(dados)
+  subj presentation_order   type item                                                                                          question answer quest_rt
+1    1                  5 Treino NULL A parte destacada da frase (em negrito) é compatível com a parte não destacada (em fonte normal).      4    51328
+2    1                  6 Treino NULL A parte destacada da frase (em negrito) é compatível com a parte não destacada (em fonte normal).      2    29362
+3    1                  7 Treino NULL A parte destacada da frase (em negrito) é compatível com a parte não destacada (em fonte normal).      5     6666
+4    1                 58    D_2 NULL A parte destacada da frase (em negrito) é compatível com a parte não destacada (em fonte normal).      5    16914
+5    1                 91   D_35 NULL A parte destacada da frase (em negrito) é compatível com a parte não destacada (em fonte normal).      5     9465
+6    1                 87   D_31 NULL A parte destacada da frase (em negrito) é compatível com a parte não destacada (em fonte normal).      5    13327
+                                                                                                                     sentence                                    subj_uid
+1                       O jogador de futebol que foi convocado compareceu no horário%2C &lt;b&gt;mas não estava em plena forma.&lt;/b&gt; 1615578921_9b55b3473cc4d662de9e8d3c82557742
+2           Os professores de judô da academia se encontraram para o treino%2C &lt;b&gt;mas eles não tinha esquecido o quimono.&lt;/b&gt; 1615578921_9b55b3473cc4d662de9e8d3c82557742
+3                                   As frutas caíram da árvore mais cedo no verão%2C &lt;b&gt;mas a garotada comeu assim mesmo.&lt;/b&gt; 1615578921_9b55b3473cc4d662de9e8d3c82557742
+4        A loja de frutas da praça principal da cidade não abriu naquele dia%2C &lt;b&gt;mas vendia produtos sempre excelentes.&lt;/b&gt; 1615578921_9b55b3473cc4d662de9e8d3c82557742
+5                   A viagem de fim de semana não foi como o esperado pelo grupo &lt;b&gt;porque eles não planejaram muito bem.&lt;/b&gt; 1615578921_9b55b3473cc4d662de9e8d3c82557742
+6 O intelectual buscou escrever uma obra compreensível para o público%2C &lt;b&gt;mas o acadêmico esperava demais dos leitores.&lt;/b&gt; 1615578921_9b55b3473cc4d662de9e8d3c82557742
+</code></pre><p>Esses dados podem parecer bagunçados, mas eles na verdade já estão no formato que desejamos. Eles só parecem meio loucos porque há algumas colunas com frases inteiras das quais nós até podemos eventualmente precisar, mas que, nesse momento, não nos interessam. Por isso, podemos simplesmente fazer uma limpeza desses dados, jogando fora essas colunas (perceba que você não está modificando em nada seu arquivo original, que está &ldquo;muito bem, obrigado&rdquo;, guardado do jeito que saiu do Ibex, na pasta onde você o deixou. Nós estamos aqui trabalhando com uma cópia bonita dele.)</p>
+<p>Se você quiser vê-los com mais clareza, basta fazer uma exclusão dessas colunas inúteis com o pacote <code>dplyr</code>:</p>
+<pre><code>dados&lt;-dados %&gt;%
+  select(-c(question, sentence, subj_uid))
+</code></pre><p>Observe o sinal de menos antes da função concatenar <code>-c()</code>, indicando que você quer uma seleção que <em>não inclua</em> as colunas ali especificadas. O resultado será algo assim (bem mais amigável!):</p>
+<pre><code>&gt; head(dados, 12)
+   subj presentation_order         type item answer quest_rt
+1     1                  5       Treino NULL      4    51328
+2     1                  6       Treino NULL      2    29362
+3     1                  7       Treino NULL      5     6666
+4     1                 58          D_2 NULL      5    16914
+5     1                 91         D_35 NULL      5     9465
+6     1                 87         D_31 NULL      5    13327
+7     1                 56 e.todo-um_PL   12      2     9433
+8     1                 80         D_24 NULL      5    13869
+9     1                 89         D_33 NULL      5     6917
+10    1                 62          D_6 NULL      5    13107
+11    1                 61          D_5 NULL      5     8330
+12    1                 51 e.todo-um_SG   11      2    12583
+</code></pre><p>Perceba que partimos de um conjunto de dados intragáveis, praticamente impossíveis de manipular ou de serem abertos no Excel para uma tabelinha linda e maravilhosa. E isso usando apenas duas ou três linhas de código. Mas aí chegamos a um ponto em que muita gente empaca: separar as variáveis que compõem as condições em colunas diferentes. Isso, contudo, também é muito fácil: basta usar o pacote <code>stringr</code>.</p>
+<p>Observe nos dados acima que a coluna &ldquo;type&rdquo; contém as etiquetas para as frases de Treino, para as Distratoras (iniciadas com &ldquo;D_&quot;) e para as experimentais (iniciadas com um &ldquo;e.&quot;). Devemos, então, ficar apenas com as experimentais, que é o que nos interessa nesse momento. Vamos fazer isso em um passo simples: filtrar apenas as sentenças experimentais com a função <code>filter</code>, do pacote <code>dplyr</code>, e a função <code>str_detect</code>, do pacote <code>stringr</code>:</p>
+<pre><code>dados &lt;- dados %&gt;%
+  filter(str_detect(type, &quot;^e&quot;))
+</code></pre><p>A função <code>str_detect</code> buscou na coluna &ldquo;type&rdquo; apenas os elementos começados (o sinal de <code>^</code>) com a letra &ldquo;e&rdquo;, ou seja, os nossos itens experimentais, que já estavam marcados assim desde o Ibex, inclusive para garantir a aleatorização durante a apresentação do experimento. O resultado agora ficou assim:</p>
+<pre><code>&gt; head(dados)
+  subj presentation_order         type item answer quest_rt
+1    1                 56 e.todo-um_PL   12      2     9433
+2    1                 51 e.todo-um_SG   11      2    12583
+3    1                 14 e.um-todo_PL    2      5    18145
+4    1                 41 e.um-todo_SG    9      5     9728
+5    1                 25 e.um-todo_SG    5      5    15724
+6    1                 30 e.um-todo_PL    6      2    21496
+</code></pre><p>O maior problema é que os fatores estudados (nesse caso, a Ordem dos quantificadores - um-todo e todo-um) e o Número da anáfora (SG e PL) estão numa mesma coluna (&ldquo;type&rdquo;) e a gente precisa deles em duas colunas diferentes. Para isso, vamos usar a função <code>separate</code> do pacote <code>tidyr</code>, irmão do <code>dplyr</code>:</p>
+<pre><code>dados &lt;- dados %&gt;%
+ separate(type, c(&quot;Ordem&quot;, &quot;Num&quot;), &quot;[_]&quot;)
+</code></pre><p>O resultado será algo assim:</p>
+<pre><code>&gt; head(dados)
+  subj presentation_order     Ordem Num item answer quest_rt
+1    1                 56 e.todo-um  PL   12      2     9433
+2    1                 51 e.todo-um  SG   11      2    12583
+3    1                 14 e.um-todo  PL    2      5    18145
+4    1                 41 e.um-todo  SG    9      5     9728
+5    1                 25 e.um-todo  SG    5      5    15724
+6    1                 30 e.um-todo  PL    6      2    21496
+</code></pre><p>Com ele em mãos, fica mais fácil entender a função: ela recebeu como <em>input</em> a coluna &ldquo;type&rdquo;, criou duas novas colunas, uma chamada &ldquo;Ordem&rdquo; e outra chamada &ldquo;Num&rdquo; (você pode chamá-las como quiser, obviamente) e usou o <em>underline</em> como elemento de separação. Logo, onde havia <em>underline</em> nos dados originais, ou seja, justamente antes de SG ou PL, a função fez a separação. Mas ainda temos um problema: na coluna ordem, não queremos aquele &ldquo;e.&rdquo; antes de &ldquo;todo-um&rdquo; ou &ldquo;um-todo&rdquo;. Usemos de novo <code>separate</code>, mas agora com o ponto final (.) como elemento de separação:</p>
+<pre><code>dados &lt;- dados %&gt;%
+  separate(Ordem, c(&quot;a&quot;, &quot;Ordem&quot;), &quot;[.]&quot;)
+</code></pre><p>O resultado será algo assim, com uma coluna, de nome &ldquo;a&rdquo; inútil.</p>
+<pre><code>head(test)
+ subj presentation_order a   Ordem Num item answer quest_rt
+1    1                 56 e todo-um  PL   12      2     9433
+2    1                 51 e todo-um  SG   11      2    12583
+3    1                 14 e um-todo  PL    2      5    18145
+4    1                 41 e um-todo  SG    9      5     9728
+5    1                 25 e um-todo  SG    5      5    15724
+6    1                 30 e um-todo  PL    6      2    21496
+</code></pre><p>Você pode simplesmente excluir essa coluna com a função <code>select</code>:</p>
+<pre><code>dados &lt;- dados %&gt;%
+  select(-a)
+</code></pre><p>E pronto, seus dados estão super limpos e organizados.</p>
+<p>Pode parecer muito porque fomos fazendo passo a passo a fim de facilitar a compreensão, mas, no final das contas, o código todo tem apenas seis linhas. É ridiculamente simples para toda a tarefa que ele desempenhou e que ficaríamos horas para fazer, digamos, no Excel, sem contar com os possíveis erros humanos advindos do processo. Eis o código completo:</p>
+<pre><code>dados&lt;-dados %&gt;%
+  select(-c(question, sentence, subj_uid)) %&gt;%
+  filter(str_detect(type, &quot;^e&quot;)) %&gt;%
+  separate(type, c(&quot;Ordem&quot;, &quot;Num&quot;), &quot;[_]&quot;) %&gt;%
+  separate(Ordem, c(&quot;a&quot;, &quot;Ordem&quot;), &quot;[.]&quot;) %&gt;%
+  select(-a)
+</code></pre><h1 id="acessando-os-dados-do-pcibex">Acessando os dados do PCIbex</h1>
+<p>No PCIbex as coisas são ainda mais fáceis, já que você não precisa de uma função para cada tipo de controlador. Basta usar a função <code>read.pcibex</code>, disponibilizada pelos autores <a href="https://doc.pcibex.net/how-to-guides/data-transformation/">aqui</a>, passando, como sempre, o <code>PATH</code> do seu arquivo como argumento da função.(Os dados aqui usamos me foram gentilmente cedidos pela amiga Ana Paula).</p>
+<pre><code>dados&lt;-read.pcibex(&quot;/home/igor/Downloads/results.txt&quot;)
+</code></pre><p>Como no caso anterior, você terá um monte de colunas, muitas das quais você não precisa:</p>
+<pre><code>&gt; head(dados)
+  Results.reception.time MD5.hash.of.participant.s.IP.address Controller.name Order.number.of.item Inner.element.number Label Latin.Square.Group PennElementType PennElementName Parameter Value    EventTime        id  age   birth     live                     school Comments
+1             1617327899     28783ca8d9607ccae99087129ad2830b  PennController                    1                    0  TCLE               NULL  PennController               0   _Trial_ Start 1.617328e+12 undefined NULL                                                     
+2             1617327899     28783ca8d9607ccae99087129ad2830b  PennController                    1                    0  TCLE               NULL  PennController               0  _Header_ Start 1.617328e+12 undefined NULL                                                     
+3             1617327899     28783ca8d9607ccae99087129ad2830b  PennController                    1                    0  TCLE               NULL  PennController               0  _Header_   End 1.617328e+12 undefined NULL                                                     
+4             1617327899     28783ca8d9607ccae99087129ad2830b  PennController                    1                    0  TCLE               NULL  PennController               0   _Trial_   End 1.617328e+12 undefined NULL                                                     
+5             1617327899     28783ca8d9607ccae99087129ad2830b  PennController                    2                    0  info               NULL  PennController               1   _Trial_ Start 1.617328e+12 undefined   34 xdfgsdg sdsdsdfg Ensino Superior incompleto     NULL
+6             1617327899     28783ca8d9607ccae99087129ad2830b  PennController                    2                    0  info               NULL  PennController               1  _Header_ Start 1.617328e+12 undefined   34 xdfgsdg sdsdsdfg Ensino Superior incompleto     NULL
+</code></pre><p>Livre-se delas com a função <code>select</code>, do <code>dplyr</code>:</p>
+<pre><code>dados&lt;-dados %&gt;%
+  select(-c(Results.reception.time,
+            MD5.hash.of.participant.s.IP.address,
+            Controller.name,
+            Latin.Square.Group,
+            PennElementType,
+            PennElementName,
+            school,
+            live,
+            Comments))
+</code></pre><p>E você terá algo assim:</p>
+<pre><code>&gt; head(dados)
+  Order.number.of.item Inner.element.number Label Parameter Value    EventTime        id  age   birth
+1                    1                    0  TCLE   _Trial_ Start 1.617328e+12 undefined NULL        
+2                    1                    0  TCLE  _Header_ Start 1.617328e+12 undefined NULL        
+3                    1                    0  TCLE  _Header_   End 1.617328e+12 undefined NULL        
+4                    1                    0  TCLE   _Trial_   End 1.617328e+12 undefined NULL        
+5                    2                    0  info   _Trial_ Start 1.617328e+12 undefined   34 xdfgsdg
+6                    2                    0  info  _Header_ Start 1.617328e+12 undefined   34 xdfgsdg
+</code></pre><p>Como anteriormente, você precisará investigar os seus dados. Nesse caso, as informações de que precisamos estão na coluna &ldquo;Label&rdquo;. Você pode investigar a composição dessa coluna com a função <code>unique</code>:</p>
+<pre><code>&gt; unique(dados$Label)
+ [1] &quot;TCLE&quot;         &quot;info&quot;         &quot;instructions&quot; &quot;treino&quot;       &quot;A-3&quot;          &quot;distL-5&quot;      &quot;B-1&quot;          &quot;distT-5&quot;      &quot;C-2&quot;          &quot;distSi-2&quot;     &quot;F-3&quot;          &quot;distR-1&quot;      &quot;E-4&quot;          &quot;distR-3&quot;      &quot;D-1&quot;          &quot;distR-5&quot;      &quot;G-4&quot;          &quot;distSi-8&quot;    
+[19] &quot;H-3&quot;          &quot;distSi-3&quot;     &quot;B-2&quot;          &quot;distSi-1&quot;     &quot;A-2&quot;          &quot;distSi-5&quot;     &quot;D-3&quot;          &quot;H-4&quot;          &quot;distSi-4&quot;     &quot;F-4&quot;          &quot;distT-3&quot;      &quot;distT-8&quot;      &quot;E-2&quot;          &quot;distR-6&quot;      &quot;C-4&quot;          &quot;distL-1&quot;      &quot;distT-1&quot;      &quot;distSe-5&quot;    
+[37] &quot;B-4&quot;          &quot;H-1&quot;          &quot;distSe-6&quot;     &quot;distL-8&quot;      &quot;D-4&quot;          &quot;distL-3&quot;      &quot;G-1&quot;          &quot;distR-4&quot;      &quot;D-2&quot;          &quot;distT-6&quot;      &quot;distR-2&quot;      &quot;C-3&quot;          &quot;distL-7&quot;      &quot;F-1&quot;          &quot;distSe-8&quot;     &quot;F-2&quot;          &quot;distT-4&quot;      &quot;E-3&quot;         
+[55] &quot;A-4&quot;         
+</code></pre><p>Observe que aqui temos várias informações de que não precisamos: &ldquo;TCLE&rdquo;, &ldquo;treino&rdquo;, &ldquo;info&rdquo;, &ldquo;instructions&rdquo; e todas as distratoras, que são de vários tipos, mas começam invariavelmente com &ldquo;dist&rdquo;. As sentenças experimentais, por sua vez, não começam com uma letra específica, como &ldquo;e&rdquo;. Logo, não temos uma informação recorrente para poder filtrar apenas as experimentais a partir dela. Vamos, então, primeiro eliminar o que não queremos e deixar só as experimentais:</p>
+<pre><code>dados &lt;- dados %&gt;%
+  filter(!Label %in% c(&quot;TCLE&quot;, &quot;treino&quot;, &quot;info&quot;, &quot;instructions&quot;)) %&gt;%
+  filter(!str_detect(Label, &quot;^dist&quot;))
+</code></pre><p>Repare que a única coisa que fizemos de diferente aí foi usar o sinal de exclamação (<code>!</code>) na função <code>filter</code>, indicando negação: ou seja, queremos ficar com tudo que não seja o que está especificado nessas funções. Observe também o uso da função <code>str_detect</code>, que também foi negada, ou seja, queremos apenas o que não é distratora, ou seja, o que não começa com dist (<code>^dist</code>). O resultado é esse, com apenas as sentenças experimentais na coluna &ldquo;Label&rdquo;:</p>
+<pre><code>head(dados)
+ Order.number.of.item Inner.element.number Label Parameter Value    EventTime        id  age birth
+1                    8                    0   A-3   _Trial_ Start 1.617328e+12 undefined NULL      
+2                    8                    0   A-3  _Header_ Start 1.617328e+12 undefined NULL      
+3                    8                    0   A-3  _Header_   End 1.617328e+12 undefined NULL      
+4                    8                    0   A-3         1  João 1.617328e+12 undefined  159 false
+5                    8                    0   A-3         2 levou 1.617328e+12 undefined  153 false
+6                    8                    0   A-3         3 todos 1.617328e+12 undefined  152 false
+</code></pre><p>Com isso, basta o passo final com a função <code>separate</code>, do <code>tidyr</code>:</p>
+<pre><code>dados &lt;- dados %&gt;%
+  separate(Label, c(&quot;Cond&quot;, &quot;Item&quot;), &quot;[-]&quot;)
+</code></pre><p>Observe que o elemento separador aqui é o traço simples (-) e não o <em>underline</em>. O resultado será assim:</p>
+<pre><code>&gt; head(dados)
+  Order.number.of.item Inner.element.number Cond Item Parameter Value    EventTime        id  age birth
+1                    8                    0    A    3   _Trial_ Start 1.617328e+12 undefined NULL      
+2                    8                    0    A    3  _Header_ Start 1.617328e+12 undefined NULL      
+3                    8                    0    A    3  _Header_   End 1.617328e+12 undefined NULL      
+4                    8                    0    A    3         1  João 1.617328e+12 undefined  159 false
+5                    8                    0    A    3         2 levou 1.617328e+12 undefined  153 false
+6                    8                    0    A    3         3 todos 1.617328e+12 undefined  152 false
+</code></pre><p>Exatamente o que precisávamos! Novamente, o código para fazer isso tudo é ridiculamente pequeno: ele tem, de fato, apenas 5 linhas!</p>
+<pre><code>dados&lt;-dados %&gt;%
+  select(-c(Results.reception.time,
+            MD5.hash.of.participant.s.IP.address,
+            Controller.name,
+            Latin.Square.Group,
+            PennElementType,
+            PennElementName,
+            school,
+            live,
+            Comments)) %&gt;%
+  filter(!Label %in% c(&quot;TCLE&quot;, &quot;treino&quot;, &quot;info&quot;, &quot;instructions&quot;)) %&gt;%
+  filter(!str_detect(Label, &quot;^dist&quot;)) %&gt;%
+  separate(Label, c(&quot;Cond&quot;, &quot;Item&quot;), &quot;[-]&quot;)
+</code></pre><p>O pacote <code>stingr</code> é de fato muito útil e teria me poupado muita dor de cabeça se eu o tivesse conhecido antes. Se você quiser vê-lo sendo usado para fazer umas coisas mais poderosas, dê uma olhada nos primeiros minutos <a href="https://www.youtube.com/watch?v=_1msVvPE_KY">desse vídeo</a>, da diva do R <a href="https://juliasilge.com/">Julia Silge</a>, e divirta-se!</p>
+
+    </div>
+    <div class="post-footer">
+      
+    </div>
+  </article>
+
+    </main>
+  </body>
+</html>

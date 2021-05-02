@@ -1,0 +1,341 @@
+<!doctype html>
+<html lang="en-us">
+  <head>
+    <title>Tratamento de dados de Escala Likert // Igor Costa</title>
+    <link rel="shortcut icon" href="/favicon.ico" />
+    <meta charset="utf-8" />
+    <meta name="generator" content="Hugo 0.68.3" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="author" content="Igor Costa" />
+    <meta name="description" content="" />
+    <link rel="stylesheet" href="https://igordeo-costa.github.io/css/main.min.4a7ec8660f9a44b08c4da97c5f2e31b1192df1d4d0322e65c0dbbc6ecb1b863f.css" />
+
+    
+    <meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Tratamento de dados de Escala Likert"/>
+<meta name="twitter:description" content="Preliminares Nosso objetivo é mostrar como fazer um tratamento preliminar de dados de escala do tipo Likert usando o R. Nosso caminho será:
+  Inicialmente, mostraremos como extrair os dados de um documento advindo do Ibex Farm, fazendo uma pequena limpeza nos dados de modo a torná-los mais palatáveis;
+  Em seguida, faremos uma breve investigação descritiva dos dados, mostrando como construir uma tabela com contagens e porcentagens para cada nível da escala e como visualizar esses dados com um gráfico útil para publicar essas informações;"/>
+
+    <meta property="og:title" content="Tratamento de dados de Escala Likert" />
+<meta property="og:description" content="Preliminares Nosso objetivo é mostrar como fazer um tratamento preliminar de dados de escala do tipo Likert usando o R. Nosso caminho será:
+  Inicialmente, mostraremos como extrair os dados de um documento advindo do Ibex Farm, fazendo uma pequena limpeza nos dados de modo a torná-los mais palatáveis;
+  Em seguida, faremos uma breve investigação descritiva dos dados, mostrando como construir uma tabela com contagens e porcentagens para cada nível da escala e como visualizar esses dados com um gráfico útil para publicar essas informações;" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://igordeo-costa.github.io/posts/escalalikert/" />
+<meta property="article:published_time" content="2021-04-01T23:05:39-03:00" />
+<meta property="article:modified_time" content="2021-04-01T23:05:39-03:00" />
+
+
+  </head>
+  <body>
+    <header class="app-header">
+      <a href="https://igordeo-costa.github.io/"><img class="app-header-avatar" src="/avatar.png" alt="Igor Costa" /></a>
+      <h1>Igor Costa</h1>
+      <nav class="app-header-menu">
+          <a class="app-header-menu-item" href="/">Home</a>
+             - 
+          
+          <a class="app-header-menu-item" href="/tags/">Tags</a>
+             - 
+          
+          <a class="app-header-menu-item" href="/about/">Atuação</a>
+      </nav>
+      <p>Doutorando em Estudos da Linguagem - Lapal/PUC-Rio.</p>
+      <div class="app-header-social">
+        
+          <a href="https://github.com/igordeo-costa" target="_blank" rel="noreferrer noopener">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-github">
+  <title>Github</title>
+  <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+</svg>
+          </a>
+        
+      </div>
+    </header>
+    <main class="app-container">
+      
+  <article class="post">
+    <header class="post-header">
+      <h1 class ="post-title">Tratamento de dados de Escala Likert</h1>
+      <div class="post-meta">
+        <div>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-calendar">
+  <title>calendar</title>
+  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line>
+</svg>
+          Apr 1, 2021
+        </div>
+        <div>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-clock">
+  <title>clock</title>
+  <circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline>
+</svg>
+          12 min read
+        </div>
+        <div>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tag">
+  <title>tag</title>
+  <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line>
+</svg>
+              <a class="tag" href="https://igordeo-costa.github.io/tags/regress%C3%A3o/">Regressão</a>
+        </div>
+      </div>
+    </header>
+    <div class="post-content">
+      <h1 id="preliminares">Preliminares</h1>
+<p>Nosso objetivo é mostrar como fazer um tratamento preliminar de dados de escala do tipo Likert usando o R. Nosso caminho será:</p>
+<ol>
+<li>
+<p>Inicialmente, mostraremos como extrair os dados de um documento advindo do <a href="https://spellout.net/ibexfarm/">Ibex Farm</a>, fazendo uma pequena limpeza nos dados de modo a torná-los mais palatáveis;</p>
+</li>
+<li>
+<p>Em seguida, faremos uma breve investigação descritiva dos dados, mostrando como construir uma tabela com contagens e porcentagens para cada nível da escala e como visualizar esses dados com um gráfico útil para publicar essas informações;</p>
+</li>
+<li>
+<p>Por fim, faremos uma análie desses dados com um modelo de regressão oridinal com o pacote <code>brms</code>.</p>
+</li>
+</ol>
+<p>Ao final, você deve conseguir um resultado como esse:</p>
+<p><img src="/graficofinal.png" alt="Gráfico de barras empilhadas e previsão de probabilidades."></p>
+<p>Esse artigo assume que você conhece os comandos básicos do R, como manipular dados, como instalar e carregar pacotes além de outras funcionalidades semelhantes. Nosso objetivo não é dar informações detalhadas sobres interpretação dos dados, mas apenas ilustrar como investigá-los com o R.</p>
+<h3 id="o-experimento">O experimento</h3>
+<p>O experimento mensurava o julgamento de falantes em uma escala com 5 níveis, indo de 1 = discordo totalmente até 5 = concordo totalmente. Os fatores preditivos eram ordem dos quatificadores em uma sentença (um-todo e todo-um) e número de um pronome anafórico na sentença seguinte (singular e plural). Dois exemplos esquemáticos de frases são dados abaixo:</p>
+<p>&hellip;mostrou <strong>uma</strong> camisa&hellip; para <strong>todo</strong> comprador&hellip;</p>
+<p>&hellip;mostrou <strong>toda</strong> camisa&hellip; para <strong>um</strong> comprador&hellip;</p>
+<p>Os dados usados nesse tutorial podem ser baixados <a href="">aqui</a>. Os nomes e e-mails dos participantes foram alterados para preservar suas identidades. Uma descrição mais detalhada do experimento pode ser encontrada <a href="">aqui</a>.</p>
+<h1 id="carregando-os-dados-de-um-arquivo-ibex">Carregando os dados de um arquivo ibex</h1>
+<p>O primeiro passo é instalar o pacote <code>ibextor</code> para acessar os dados do Ibex Farm. Se o comando <code>install.packages(&quot;ibextor&quot;)</code> não funcionar, sugerimos que você instale o pacote <code>remotes</code> e então faça a instalação diretamente do repositório do <code>ibextor</code>. A Documentação do pacote está disponível <a href="https://github.com/antonmalko/ibextor">aqui</a>.</p>
+<pre><code class="language-{r}" data-lang="{r}">install.packages(&quot;remotes&quot;)
+remotes::install_github(&quot;antonmalko/ibextor&quot;)
+</code></pre><h3 id="carregando-pacotes-necessários-para-esse-tutorial">Carregando pacotes necessários para esse tutorial</h3>
+<pre><code class="language-{r}" data-lang="{r}">require(stringr)
+require(dplyr)
+require(tidyr)
+require(ibextor)
+</code></pre><h3 id="extraindo-resultados-de-julgamento-de-aceitabilidade">Extraindo resultados de julgamento de aceitabilidade</h3>
+<p>Para começar, vamos usar a função <code>get_results_aj</code> para extrair os dados de nosso interesse. Observe que <code>aj</code> vem de <code>acceptability judgment</code>, que é o tipo de experimento feito no Ibex nesse caso. Se você estivesse extraindo outro tipo de dado, como de leitura automonitorada, a função seria outra. Consulte a <a href="https://github.com/antonmalko/ibextor">documentação do pacote</a> para esses casos. Vamos colocar esses dados num objeto de nome <code>dados</code> (você pode dar o nome que você quiser). Repare que você precisará colocar o <code>PATH</code> adequado no local onde está, no exemplo baixo, <code>&quot;/home/dados/...&quot;</code>. Esse é o endereço no seu computador onde o arquivo está guardado, terminando com o nome do arquivo.</p>
+<pre><code class="language-{r}" data-lang="{r}">dados&lt;-get_results_aj(&quot;/home/dados/Acadêmicos/Doutorado/EXPERIMENTOS_2021/EscalaLikert/Resultados.csv&quot;)
+</code></pre><p>Se você quiser, pode explorar essa tabela com as funções <code>head</code>, <code>str</code>, etc. Após essa inspeção, nós vamos limpá-la de algumas colunas que não nos interessam nela. Caso deseje entender o que estamos fazendo aqui, rode passo a passo o código abaixo:</p>
+<pre><code class="language-{r}" data-lang="{r}">dados&lt;-dados %&gt;%
+  select(-c(question, sentence, presentation_order, subj_uid)) %&gt;% # Elimina colunas desnecessárias
+  filter(str_detect(type, &quot;^e&quot;)) %&gt;% # Filtra apenas as sentenças experimentais (começam com a letra &quot;e&quot;)
+  separate(type, c(&quot;Ordem&quot;, &quot;Num&quot;), &quot;[_]&quot;) %&gt;% # Separa a coluna &quot;type&quot; (condições) nos fatores analisados (V. Independentes)
+  separate(Ordem, c(&quot;a&quot;, &quot;Ordem&quot;), &quot;[.]&quot;) %&gt;% # Separa o &quot;e&quot; inicial em uma coluna própria
+  select(-a) # Remove essa coluna inútil
+</code></pre><h3 id="extraindo-os-dados-dos-sujeitos">Extraindo os dados dos sujeitos</h3>
+<p>Para extrair os dados socioeconômicos dos sujeitos, basta usar a função <code>get_subj_info</code>, também do <code>ibextor</code>. No caso do experimento em questão, além do <code>PATH</code> onde o arquivo está armazenado (o mesmo usado anteriormente), vamos passar pela função o argumento <code>form_name</code>, já que nosso experimento tinha mais de um formulário. Vamos dar o nome de <code>sujeitos</code> a esses dados (como sempre, você pode dar o nome que achar melhor).</p>
+<pre><code class="language-{r}" data-lang="{r}">sujeitos&lt;-get_subj_info(&quot;/home/dados/Acadêmicos/Doutorado/EXPERIMENTOS_2021/EscalaLikert/Resultados.csv&quot;,
+                        form_name = &quot;DadosPessoais&quot;) # Como há mais de um formulário, de qual deles extrair os dados
+</code></pre><p>Vamos agora fazer uma gambiarra aqui e criar uma coluna com os números de cada sujeito. Essa coluna precisa ter o mesmo nome (<code>subj</code>) da coluna sujeitos na tabela anterior. Além disso, ela será do tipo fator (<code>factor</code>), assim como a coluna <code>subj</code> da tabela anterior. Daí vamos juntar as duas tabelas com <code>inner_join</code>, de modo a ter as informações dos sujeitos, e, por fim, já que agora a coluna <code>subj</code> e <code>nome</code> são redundantes, vamos retirar a <code>nome</code>. Vamos fazer em três passos:</p>
+<pre><code class="language-{r}" data-lang="{r}">sujeitos$subj &lt;- as.factor(seq.int(nrow(sujeitos)))
+
+dados&lt;-inner_join(dados, sujeitos)
+
+dados&lt;-dados %&gt;%
+  select(-c(nome, contato)) # E também a coluna &quot;contato&quot; para garantir o sigilo dos sujeitos
+</code></pre><h3 id="extraindo-informações-necessárias">Extraindo informações necessárias</h3>
+<p>Feito isso, você pode extrair os dados que achar necessários, inclusive exportando essa tabela para fora do R para ser publicada em algum lugar. Vamos mostrar algumas possibilidades.</p>
+<p>Primeiro, vamos salvar essa tabela externamente ao R em formato <code>.csv</code>. Nesse caso, ela será salva no seu <code>working directory</code>. Veja a função <code>getwd</code> e <code>setwd</code> para saber qual é o seu diretório de trabalho e como modificá-lo.</p>
+<pre><code class="language-{r}" data-lang="{r}">write.csv(dados, &quot;dados_finais.csv&quot;)
+</code></pre><p>Vamos, além disso, filtar alguns sujeitos, digamos, que tenham sido instruídos a digitar seus nomes com uma informação (por exemplo: alunos provenientes da Universidade UERJ, que digitaram depois do nome <code>UERJ</code>).</p>
+<pre><code class="language-{r}" data-lang="{r}">sujeitos %&gt;%
+  filter(str_detect(nome, &quot;UERJ&quot;)) %&gt;% # filtrar todos que tenham &quot;UERJ&quot;
+  write.csv(&quot;alunos_uerj.csv&quot;) # Exportar a tabela
+</code></pre><p>Ou vamos supor que você precise enviar uma mensagem, digamos, a cópia do TCLE, para todos os que deixaram seu e-mail cadastrado. Como todo e-mail tem <code>@</code>, vamos filtar por esse elemento:</p>
+<pre><code class="language-{r}" data-lang="{r}">sujeitos %&gt;%
+  filter(str_detect(contato, &quot;@&quot;)) %&gt;%
+  write.csv(&quot;lista_emails.csv&quot;)
+</code></pre><h1 id="abordagem-descritiva-dos-dados">Abordagem descritiva dos dados</h1>
+<p>Os pacotes necessários a essa etapa são:</p>
+<pre><code class="language-{R}" data-lang="{R}">require(ggplot2)
+require(dplyr)
+require(RColorBrewer)
+require(tidyr)
+require(scales)
+</code></pre><h3 id="filtragens-iniciais">Filtragens iniciais</h3>
+<p>Se você quiser (e achamos que deveria), pode dar uma olhada nos dados com a função <code>str</code>. A partir disso, vamos fazer algumas tranformações nos dados, transformando as colunas do tipo caractere (<code>chr</code>) em funções do tipo fator (<code>Factor</code>). A coluna <code>answer</code> será, por sua vez, do tipo ordenada (<code>ordered factor</code>), já que é a resposta dada à escala do tipo Likert.</p>
+<pre><code class="language-{r}" data-lang="{r}">dados&lt;-dados %&gt;%
+  mutate_if(is.character, as.factor) %&gt;%
+  mutate(answer=as.ordered(answer))
+</code></pre><p>Feito isso, vamos filtar os sujeitos que não atendem ao critério &ldquo;Falante nativo&rdquo; (<code>idioma == nao</code>). Se você investigar com mais atenção esses dados, perceberá que todos os sujeitos atendem ao critério &ldquo;escolaridade&rdquo; (Ensino Médio Completo), então não vamos tirar nada com base nessa coluna. No entanto, ao investigar a construção dos estímulos, percebemos um problema com o item de número 11, então vamos eliminá-lo completamente também.</p>
+<pre><code class="language-{r}" data-lang="{r}">dados&lt;-dados %&gt;%
+  filter(idioma %in% &quot;sim&quot;) %&gt;% # Seleciona apenas o que contém &quot;sim&quot;
+  filter(!item == 11) # Seleciona apenas o que não contém (`!=`) 11.
+</code></pre><h3 id="abordagem-descritiva-por-si">Abordagem descritiva por si</h3>
+<p>Em primeiro lugar, vamos deixar claro que o modo de fazer o gráfico foi primeiramente disponibilizado <a href="https://ourcodingclub.github.io/tutorials/qualitative/">neste endereço</a>. Vale a pena dar uma conferida por lá.</p>
+<p>Antes de tudo, vamos calcular a contagem dos valores brutos, colocar isso em uma tabela no formato horizontal, mudar o nome das colunas de modo que os números da escala (1 a 5) recebem suas categorias correspondentes (de &ldquo;discordo totalmente&rdquo; até &ldquo;concordo totalmente&rdquo;):</p>
+<pre><code class="language-{r}" data-lang="{r}">contag &lt;- dados %&gt;%
+  group_by(Ordem, Num, answer) %&gt;%
+  tally() %&gt;%
+  group_by(Ordem, Num) %&gt;%
+  spread(answer, n)
+
+colnames(contag) &lt;- c(&quot;Ordem&quot;, &quot;Num&quot;, &quot;Discordo_Totalmente&quot;, &quot;Discordo&quot;, &quot;Neutro&quot;, &quot;Concordo&quot;, &quot;Concordo_Totalmente&quot;)
+
+write.csv(contag, &quot;contagens.csv&quot;)
+</code></pre><p>Agora vamos calcular as porcentagens correspondentes e colocar em uma tabela de formato horizontal.</p>
+<pre><code class="language-{r}" data-lang="{r}">porc_horiz &lt;- dados %&gt;%
+  group_by(Ordem, Num, answer) %&gt;%
+  tally() %&gt;%
+  mutate(perc=n/sum(n)*100) %&gt;%
+  dplyr::select(-n) %&gt;%
+  group_by(Ordem, Num) %&gt;%
+  spread(answer, perc)
+
+colnames(porc_horiz) &lt;- c(&quot;Ordem&quot;, &quot;Num&quot;, &quot;Discordo_Totalmente&quot;, &quot;Discordo&quot;, &quot;Neutro&quot;, &quot;Concordo&quot;, &quot;Concordo_Totalmente&quot;)
+
+write.csv(porc_horiz, &quot;porcentagens.csv&quot;)
+</code></pre><p>Seu resultado será parecido com isso:</p>
+<pre><code class="language-{r}" data-lang="{r}">&gt; porc_horiz
+# A tibble: 4 x 7
+# Groups:   Ordem, Num [4]
+  Ordem   Num   Discordo_Totalmente Discordo Neutro Concordo Concordo_Totalmente
+  &lt;fct&gt;   &lt;fct&gt;               &lt;dbl&gt;    &lt;dbl&gt;  &lt;dbl&gt;    &lt;dbl&gt;               &lt;dbl&gt;
+1 todo-um PL                  52.3     24.2    6.71     9.06                7.72
+2 todo-um SG                   9.18     8.50  13.6     18.0                50.7
+3 um-todo PL                  21.4      8.44  13.6     21.4                35.1
+4 um-todo SG                   6.69     4.01  11.0     17.7                60.5
+</code></pre><p>Esses já são nossos dados finais, mas, para colocá-los em um gráfico de barras empilhadas, vamos precisar fazer algumas manipulações com eles. O princípio será o seguinte: dividir os dados ao meio, de modo que um conjunto contenha os dados da parte baixa da escala, ou seja, discordo totalmente e discordo; e outro conjunto contenha os dados da parte de cima da escala, ou seja, concordo e concordo totamente. Além disso, quanto ao meio da escala (o julgamento Neutro), temos que colocar metade dele abaixo e metade dele acima da escala.</p>
+<p>Primeiro, vamos dividir o meio da escala (os julgamentos &ldquo;Neutro&rdquo;):</p>
+<pre><code class="language-{r}" data-lang="{r}">dados_meio &lt;- porc_horiz %&gt;%
+  mutate(c1 = Neutro / 2,
+         c2 = Neutro / 2) %&gt;%
+  dplyr::select(Ordem, Num, Discordo_Totalmente, Discordo, c1, c2, Concordo, Concordo_Totalmente) %&gt;%
+  gather(key = answer, value = perc, 3:8)
+</code></pre><p>Agora vamos separar a escala em dois conjuntos, o &ldquo;alto&rdquo; e o &ldquo;baixo&rdquo; (não deixe de ler os comentários no código, pois há uma inversão que pode ser um pouco confusa):</p>
+<pre><code class="language-{r}" data-lang="{r}">meio_alto &lt;- dados_meio %&gt;%
+  filter(answer %in% c(&quot;Concordo_Totalmente&quot;, &quot;Concordo&quot;, &quot;c2&quot;)) %&gt;%
+  mutate(answer = factor(answer, levels = c(&quot;Concordo_Totalmente&quot;, &quot;Concordo&quot;, &quot;c2&quot;))) # Níveis na ordem normal!
+
+meio_baixo &lt;- dados_meio %&gt;%
+  filter(answer %in% c(&quot;c1&quot;, &quot;Discordo&quot;, &quot;Discordo_Totalmente&quot;)) %&gt;%
+  mutate(answer = factor(answer, levels = c(&quot;Discordo_Totalmente&quot;, &quot;Discordo&quot;, &quot;c1&quot;))) # Níveis na ordem inversa!
+</code></pre><p>Com isso, você já poderia plotar os dados com o <code>ggplot2</code>, mas vamos estabelecer uma paleta de cores mais interessante para os dados. Você pode investigar as diversas paletas de cores do pacote <code>RColorBrewer</code> apenas <a href="https://www.r-graph-gallery.com/38-rcolorbrewers-palettes.html">buscando no Google</a> pelo nome do pacote.</p>
+<pre><code class="language-{r}" data-lang="{r}">legend_pal &lt;- brewer.pal(name = &quot;Spectral&quot;, n = 5) # Usar, do pacote RColorBrewer, a paleta de cores &quot;spectral&quot;, com 5 cores
+legend_pal&lt;-c(&quot;#2B83BA&quot;, &quot;#ABDDA4&quot;, &quot;#FFFFBF&quot;, &quot;#FFFFBF&quot;, &quot;#FDAE61&quot;, &quot;#D7191C&quot;) # Duplica a cor do meio manualmente
+legend_pal &lt;- gsub(&quot;#FFFFBF&quot;, &quot;#9C9C9C&quot;, legend_pal) # Substituir a cor do meio por um cinza
+names(legend_pal) &lt;- c(&quot;Concordo_Totalmente&quot;, &quot;Concordo&quot;, &quot;c1&quot;, &quot;c2&quot;, &quot;Discordo&quot;, &quot;Discordo_Totalmente&quot;) # Atribuir nomes às cores
+</code></pre><p>Com isso, podemos produzir o gráfico, o mesmo que está no Painel 1 no innício deste post. Retire o comentário de <code>coord_flip</code> se quiser ver o gráfico por um outro ângulo.</p>
+<pre><code class="language-{r}" data-lang="{r}">ggplot() +
+    geom_bar(data = meio_alto, aes(x = Num, y=perc, fill = answer), stat=&quot;identity&quot;) +
+    geom_bar(data = meio_baixo, aes(x = Num, y=-perc, fill = answer), stat=&quot;identity&quot;) +
+    geom_hline(yintercept = 0, color =c(&quot;black&quot;)) +
+    facet_wrap(~Ordem)+
+    scale_fill_manual(values = legend_pal,
+                      breaks = c(&quot;Concordo_Totalmente&quot;, &quot;Concordo&quot;, &quot;c2&quot;, &quot;Discordo&quot;, &quot;Discordo_Totalmente&quot;),
+                      labels = c(&quot;Concordo_Totalmente&quot;, &quot;Concordo&quot;, &quot;Neutro&quot;, &quot;Discordo&quot;, &quot;Discordo_Totalmente&quot;)) +
+    scale_y_continuous(breaks = seq(from=-100, to=100, by=20))+
+    #coord_flip() +
+    labs(x = &quot;&quot;, y = &quot;Porcentagem de Respostas (%)&quot;, fill=&quot;Respostas&quot;) +
+    ggtitle(&quot;Painel 1: Distribuição percentual dos julgamentos na amostra&quot;,
+            subtitle = &quot;Barras empilhadas somam 100% cada&quot;) +
+    theme_classic()
+</code></pre><p>Se você quiser, pode fazer o mesmo gráfico para os itens ou mesmo para cada um dos sujeitos. Para isso, basta repetir os passos, desde a produção da tabela de contagens e porcentagens. É um bom exercício para praticar.</p>
+<h1 id="ajustando-um-modelo-de-regressão-ordinal-aos-dados">Ajustando um modelo de regressão ordinal aos dados</h1>
+<p>Os pacotes necessários a essa etapa são:</p>
+<pre><code class="language-{r}" data-lang="{r}">require(brms)
+require(sjPlot)
+</code></pre><p>Como a variável resposta desse experimento é de natureza ordinal, ou seja, valores ordenados em uma escala, o modo adequado de analisá-la é com um modelo de regressão ordinal. Há alguns pacotes no <code>R</code> que fazem esse serviço. O mais comum deles é o pacote <code>MASS</code>, que tem a função <code>polr</code> para esse tipo de dado. Um bom exemplo de como fazer uma análise desse tipo pode ser encontrada <a href="https://stats.idre.ucla.edu/r/dae/ordinal-logistic-regression/">neste endereço</a>. O problema é que essa função não nos permite incluir fatores aleatórios (&ldquo;random factors&rdquo;) no modelo, e, no caso em questão, temos dois fatores aleatórios (<code>sujeitos</code> e <code>itens</code>).</p>
+<p>Uma boa solução, então, seria usar o <a href="https://cran.r-project.org/web/packages/ordinal/ordinal.pdf">pacote ordinal</a>. No entanto, esse pacote não nos fornece uma importante ferramenta, que o pacote <code>MASS</code> fornecia, que é a &ldquo;previsão de probabilidades&rdquo;. Se quiser saber como usar esse pacote, você pode dar uma olhada <a href="https://cran.r-project.org/web/packages/ordinal/vignettes/clmm2_tutorial.pdf">neste tutorial</a>.</p>
+<p>A saída parece ser, portanto, apelar para a estratégia de &ldquo;usar uma bazuca para matar coelhos&rdquo; e tentar analisar os dados em uma abordagem bayesiana com o pacote <code>brms</code>, cuja documentação pode ser encontrada <a href="https://github.com/paul-buerkner/brms">aqui</a>. Há um bom tutorial do próprio autor disponível <a href="https://journals.sagepub.com/doi/10.1177/2515245918823199">aqui</a>.</p>
+<h3 id="ajustando-um-modelo-máximo">Ajustando um modelo máximo</h3>
+<p>Primeiro, vamos seguir as recomendações de <a href="https://pubmed.ncbi.nlm.nih.gov/24403724/">Baar et. al. (2013)</a> e ajustar um modelo máximo aos dados.</p>
+<p>Mas antes, verifiquemos quais os contrastes dos dados:</p>
+<pre><code class="language-{r}" data-lang="{r}">contrasts(dados$Num)
+contrasts(dados$Ordem)
+</code></pre><p>E mudemos o nível-base para &ldquo;um-todo&rdquo; para facilitar a comparação entre as condições &ldquo;um-todo&rdquo; SG x PL</p>
+<pre><code class="language-{r}" data-lang="{r}">dados$Ordem&lt;-relevel(dados$Ordem, ref = &quot;um-todo&quot;)
+</code></pre><p>Daí ajustamos o modelo. Tenha paciência porque isso vai demorar&hellip; bastante&hellip; Vamos ajustar um modelo logístico cumulativo.</p>
+<pre><code class="language-{r}" data-lang="{r}">m2 &lt;- brm(answer ~ Ordem*Num + (1+Ordem*Num|subj)+(1+Ordem*Num|item), data = dados,
+          family = cumulative(&quot;logit&quot;))
+
+summary(m2)
+</code></pre><p>Feito isso, vamos montar uma tabela com os dados dos fatores fixos e respectivos intervalos de credibilidade:</p>
+<pre><code class="language-{r}" data-lang="{r}"># Extrai os dados
+fixos.m&lt;-fixef(m2)[5:7,]
+
+# Preparar um data.frame com esses dados
+colnames(fixos.m)&lt;-c(&quot;Estimativas&quot;, &quot;Est.Error&quot;, &quot;lower&quot;, &quot;upper&quot;)
+fixos.m&lt;-as.data.frame(fixos.m)
+</code></pre><p>Agora vamos calcular as razões de chance e probabilidades correspondentes:</p>
+<pre><code class="language-{r}" data-lang="{r}">fixos.m&lt;-fixos.m %&gt;%
+  mutate(OddsRatio=exp(Estimativas)) %&gt;%
+  mutate(Probs=OddsRatio/(1 + OddsRatio)*100)
+</code></pre><p>Com isso, se você achar necessário, já pode fazer um gráfico para publicação.</p>
+<pre><code class="language-{r}" data-lang="{r}">fixos.m %&gt;%
+  ggplot(aes(x=reorder(rownames(fixos.m), Estimativas),
+             y=Estimativas))+
+  geom_hline(yintercept = 0, linetype = &quot;dashed&quot;, color = &quot;grey&quot;)+
+  geom_errorbar(aes(ymin=lower, ymax=upper), width=.0,
+                position=position_dodge(.9))+
+  geom_point(color=&quot;orange&quot;)+
+  scale_x_discrete(labels=c(&quot;ORDEM: todo_um&quot;, &quot;NÚMERO: Singular&quot;, &quot;INTERAÇÃO: ordem x número&quot;))+ # ao mudar a ordem é preciso mudar aqui
+  labs(y = &quot;LogOdds&quot;, x = &quot;&quot;) +
+  ggtitle(&quot;Coeficientes estimados e intervalos de credibilidade (0.95)&quot;,
+          subtitle = &quot;Intervalos que não contêm zero são estatisticamente significativos&quot;) +
+  coord_flip()+theme_classic()
+</code></pre><p>O resultado será mais ou menos assim:</p>
+<p><img src="/efeitosfixos.png" alt="Gráfico de efeitos fixos do modelo."></p>
+<h3 id="calculando-a-previsão-de-probabilidades">Calculando a previsão de probabilidades</h3>
+<p>Em geral, a menos que você seja um entendedor do assunto (e, portanto, nem estaria por aqui), esses coeficientes são difíceis de interpretar e, para dados ordinais, o melhor é extrair do modelo a &ldquo;previsão de probabilidades&rdquo; para os dados utilizados ou para um novo conjunto de dados. Vamos usar para isso o pacote <code>sjPlot</code> (documentação <a href="https://cran.r-project.org/web/packages/sjPlot/vignettes/plot_marginal_effects.html">aqui</a>) e investigar os chamados &ldquo;efeitos marginais&rdquo;.</p>
+<pre><code class="language-{r}" data-lang="{r}">model_data&lt;-get_model_data(m2,
+                           type = &quot;pred&quot;,
+                           terms = c(&quot;Ordem&quot;, &quot;Num&quot;),
+                           ci.lvl = .95)
+</code></pre><p>Observe que com isso já temos os dados de que precisamos, mas, para plotá-lo em um gráfico customizável, vamos arrancar esses dados daí e colocá-los em uma data.frame &ldquo;normal&rdquo;, digamos assim.</p>
+<pre><code class="language-{r}" data-lang="{r}">model_data&lt;-data.frame(ordem = model_data$x,
+                       num = model_data$group,
+                       Respostas = model_data$response.level,
+                       Probabilidades = model_data$predicted,
+                       lower = model_data$conf.low,
+                       upper = model_data$conf.high)
+
+model_data$ordem&lt;-c(rep(&quot;um-todo&quot;, 10), rep(&quot;todo-um&quot;, 10))
+
+model_data$ordem&lt;-as.factor(model_data$ordem)
+</code></pre><p>Com isso, podemos finalmente plotar o gráfico, sem os intervalos de credibilidade (mais &ldquo;clean&rdquo;, mas menos informativo) ou com esses intervalos:</p>
+<pre><code class="language-{r}" data-lang="{r}"># Preparar uma paleta de cores condizente com a paleta usada no gráfico de barras empilhadas
+paleta&lt;-c(&quot;#D7191C&quot;, &quot;#FDAE61&quot;, &quot;#9C9C9C&quot;, &quot;#ABDDA4&quot;, &quot;#2B83BA&quot;)
+
+model_data %&gt;%
+  ggplot(aes(x=num, y=Probabilidades, group=Respostas, color=Respostas))+
+  geom_line()+geom_point()+
+  facet_wrap(~ordem)+
+  geom_hline(yintercept=0.5, color=&quot;grey&quot;, linetype=&quot;dashed&quot;)+
+  scale_y_continuous(breaks = seq(from = 0, to = 1.0, by = 0.1),
+                     labels = scales::number_format(accuracy = 0.01))+
+  # scale_colour_manual(values=paleta,
+  #                    labels=c(&quot;Discordo_Totalmente&quot;, &quot;Discordo&quot;, &quot;Neutro&quot;, &quot;Concordo&quot;, &quot;Concordo_Totalmente&quot;))+
+  labs(x = &quot;Número da anáfora&quot;, y = &quot;Probabilidades preditas&quot;, fill=&quot;Respostas&quot;)+
+  ggtitle(&quot;Previsão de probabilidades estimada pelo modelo de regressão ordinal&quot;)+
+  theme_classic()+
+  guides(colour = guide_legend(reverse=T)) # Apenas organizando a ordem da legenda.
+
+model_data %&gt;%
+  ggplot(aes(x=num, y=Probabilidades, group=Respostas, color=Respostas))+
+  geom_line(position = position_dodge(0.2))+
+  geom_point(position = position_dodge(0.2))+
+  geom_errorbar(aes(ymin=lower, ymax=upper),
+                width=0.0, position = position_dodge(0.2), alpha=0.3)+
+  facet_wrap(~ordem)+
+  scale_y_continuous(breaks = seq(from = 0, to = 1.0, by = 0.1),
+                     labels = scales::number_format(accuracy = 0.01))+
+  scale_colour_manual(values=paleta,
+                      labels=c(&quot;Discordo_Totalmente&quot;, &quot;Discordo&quot;, &quot;Neutro&quot;, &quot;Concordo&quot;, &quot;Concordo_Totalmente&quot;))+
+  labs(x = &quot;Número da anáfora&quot;, y = &quot;Probabilidades preditas&quot;, fill=&quot;Respostas&quot;)+
+  ggtitle(&quot;Painel 2: Previsão de probabilidades estimada pelo modelo&quot;,
+          subtitle = &quot;Linhas verticais indicam intervalos de credibilidade preditos.&quot;)+
+  theme_classic()+
+  guides(colour = guide_legend(reverse=T)) # Apenas organizando a ordem da legenda.
+</code></pre><p>Pronto, finalmente acabamos! O resultado final será composto pelos dois gráficos disponíveis no início desse post, colocados um abaixo do outro para facilitar a comparação entre os dados descritivos (Painel 1) e os dados inferenciais (Painel 2).</p>
+
+    </div>
+    <div class="post-footer">
+      
+    </div>
+  </article>
+
+    </main>
+  </body>
+</html>
