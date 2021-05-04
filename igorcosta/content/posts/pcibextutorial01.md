@@ -13,12 +13,12 @@ Uma linha de comando é um código executável, que faz uma tarefa, digamos, gra
 
 Nos _scripts_ do PCIbex, uma linha de comentário é sempre precedida de duas barras ```//```. Assim sendo, no trecho abaixo, tudo que está depois das duas barras não é lido pelo compilador, podendo ser apagado livremente sem alterar em nada o funcionamento do código:
 
-```
+{{< highlight js >}}
 newTrial("meuexemplo", // controla a primeira "página" do experimento
     defaultText // aplica os comandos abaixo aos objetos do tipo neeText abaixo
         .center() // indica que o elemento vai aparecer no centro da tela
         .print() // mostra o elemento na tela
-```
+{{< / highlight >}}
 
 Um outro modo de colocar trechos não lidos pelo compilador é inserindo blocos inteiros de comentários, o que é feito com o seguinte código ```/* comentário aqui */```. Desse modo, tudo que estiver entre os símbolos da barra e do asterisco (no caso em questão, a frase "comentário aqui") não será lido pelo compilador.
 
@@ -34,23 +34,28 @@ Primeiro, criaremos uma página de instrução igual àquela da imagem abaixo:
 
 ![Página de instrução](/imagem1.png)
 
-Para isso, vamos usar o seguinte código:
-```
+Para isso, vamos usar o seguinte código (por favor, não se assuste com a quantidade de comentários. Vamos apagá-los logo logo e você então entenderá por que eles estão aqui no começo):
+
+{{< highlight js >}}
 // O mais básico dos experimentos de leitura automonitorada
 
 PennController.ResetPrefix(null) // Não vamos explicar esse agora, apenas mantenha-o aqui.
 
 // Primeiro, uma página de instruções muito básica
-newTrial("meuexemplo", // [Ana] é um comando, trial, que controla a primeira "página" do experimento, [Ana] e o nome essa "página" é "meuexemplo"
+newTrial("meuexemplo", // é um comando, trial, que controla a primeira "página" do experimento; o nome essa "página" é "meuexemplo"
     defaultText // aplica os comandos abaixo aos objetos do tipo newText abaixo
         .center() // indica que o elemento vai aparecer no centro da tela
         .print() // mostra o elemento na tela
+
     , // Essa vírgula separa cada um dos elementos dentro dessa primeira "página"
 
     // <br> é uma tag html para "pular linha" (do inglês "break" ou "quebra de linha");
     // <br><br> pula duas linhas, etc.
-    newText("Aperte a barra de espaço para ler as frases. <br><br> Seu tempo de leitura estará sendo medido.") // cria um novo elemento de texto [Ana] com os possíveis argumentos: ("nome do texto", "texto que quero que apareça na tela")
-  [Ana] // OBS: Por que dar nome aos objetos? O primeiro argumento é a possibilidade de dar o nome para seu objeto, caso você queira utilizá-lo novamente em outro momento do experimento sem digitar todo os código novamente. Voltaremos à essa observação em outro momento.
+    // cria um novo elemento de texto com os possíveis argumentos: ("nome do texto", "texto que quero que apareça na tela")
+    // OBS: Por que dar nome aos objetos? O primeiro argumento é a possibilidade de dar o nome para seu objeto, caso você queira utilizá-lo novamente em outro momento do experimento sem digitar todo os códigos novamente. Voltaremos a essa observação em outro momento.
+
+    newText("Aperte a barra de espaço para ler as frases. <br><br> Seu tempo de leitura estará sendo medido.")
+
     ,
 
     newText("<br>Vamos começar?")
@@ -61,10 +66,11 @@ newTrial("meuexemplo", // [Ana] é um comando, trial, que controla a primeira "p
         .print()
         .wait() // indica que o experimento será pausado até que o participante execute uma ação, neste caso, presssionar o botão.
 )
-```
+{{< / highlight >}}
+
 Olhe para esse código com carinho e leia os comentários que foram deixados ao lado de cada linha (daqui em diante, não colocaremos mais comentários sobre o que já explicamos). Observe que temos apenas um elemento principal ```newTrial``` dentro do qual existem três outros elementos, a saber: ```newText```, ```newText``` de novo e ```newButton```. O esqueleto desse _script_ é mais ou menos assim:
 
-```
+{{< highlight js >}}
 newTrial(
 
   newText()
@@ -73,14 +79,14 @@ newTrial(
   ,
   newButton()
   )
-```
+{{< / highlight >}}
 
 - ```newText```: permite acrescentar textos à página;
 - ```newButton```: permite acrescentar um botão clicável à página;
 
 Aqui há uma questão que pode complicar alguns: se há apenas dois elementos de texto, como pode haver 3 linhas de texto na página? Observe o código abaixo (e lembre-se dos comentários feitos acima). No primeiro elemento de texto, inserimos duas ```tags html``` que permitem quebrar a linha (```<br>```). Logo, temos duas linhas no mesmo elemento. Mais à frente veremos como inserir textos maiores nesse espaço.
 
-```
+{{< highlight js >}}
 newTrial(
 
   newText("Aperte a barra de espaço para ler as frases. <br><br> Seu tempo de leitura estará sendo medido.")
@@ -89,7 +95,8 @@ newTrial(
   ,
   newButton()
   )
-```
+{{< / highlight >}}
+
 Agora observe os elementos que acrescentamos, colocados exatamente abaixo de ```newTrial```:
 
 - ```.center```: centraliza o objeto;
@@ -97,7 +104,7 @@ Agora observe os elementos que acrescentamos, colocados exatamente abaixo de ```
 - ```defaultText```: controla as propriedades _default_ de todos os elementos de texto dentro desse Trial. Logo, todo elemento do tipo texto aparecerá na tela (```.print```) centralizado (```.center```);
 - ```"meuexemplo"```: é o nome que demos para esse ```Trial```, ou seja, para essa página que está sendo mostrada para você na tela. Você poderia chamar de qualquer coisa aqui, mas sempre entre aspas duplas. O código funcionará normalmente sem esse nome, mas ele pode ser importante se quisermos retomá-lo mais tarde.
 
-```
+{{< highlight js >}}
 newTrial("meuexemplo",
     defaultText
         .center()
@@ -109,25 +116,26 @@ newTrial("meuexemplo",
         ,
         newButton()
         )
-```
+{{< / highlight >}}
+
 Por fim, vamos investigar o botão:
 
 #### Inserindo um botão clicável
 
 Eis o código do nosso botão:
 
-```
+{{< highlight js >}}
 newButton("meubotao", "Sim!")
     .center()
     .print()
     .wait()
-```
+{{< / highlight >}}
 
 Como já falamos logo acima sobre o ```newTrial```, demos o nome de "meubotao" para esse objeto e dissemos que nele aparecerá escrita a palavra "Sim!". Ele aparecerá na tela (```.print```) centralizado (```.center```) e aguardará (```.wait```) até ser apertado.
 
 Pronto! Terminamos essa parte! O código final, limpo dos comentários, está abaixo:
 
-```
+{{< highlight js >}}
 PennController.ResetPrefix(null)
 
 newTrial("meuexemplo",
@@ -147,14 +155,15 @@ newTrial("meuexemplo",
         .print()
         .wait()
 )
-```
+{{< / highlight >}}
+
 ### Acrescentando um único item experimental
 
 Agora que já fizemos a nossa página de instruções (Veja bem, mais à frente, vamos incrementar esse código, colocando mais informações nele. Por enquanto estamos apenas firmando as fundações do nosso projeto.), vamos inserir um item experimental, ou seja, uma frase que apareça na tela para ser lida pelo participante do experimento palavra por palavra, de modo que o próprio participante controle essa passagem apertando a barra de espaço do teclado.
 
 Assim sendo, vamos acrescentar ao código acima o seguinte trecho:
 
-```
+{{< highlight js >}}
 , // Essa vírgula separa cada uma das "páginas"
 
 // Agora uma sentença experimental
@@ -167,10 +176,11 @@ newTrial("frase_1", // controla a segunda "página" do experimento
         .wait()
         .remove() // remove o item da tela e passa para o próximo
       ) // Fim do script aqui!
-```
+{{< / highlight >}}
+
 Novamente, leia o código e os comentários com carinho. Abaixo reescrevemos apenas o seu esqueleto para facilitar a compreensão:
 
-```
+{{< highlight js >}}
 newTrial(
     newController()
         .center()
@@ -179,14 +189,15 @@ newTrial(
         .wait()
         .remove()
       )
-```
+{{< / highlight >}}
+
 Como você já pôde notar, agora temos apenas dois elementos principais, ```newTrial``` e ```newController```. O primeiro você já sabe o que faz: controla toda a informação que está sendo mostrada na página nesse momento. Demos o nome para ele de ```frase_1```, mas você pode chamar como quiser. O segundo - ```newController``` - é mais complexo.
 
 Se você já usava o [Ibex Farm](https://spellout.net/ibexfarm), a versão antiga do PCIbex, lembrará certamente que lá havia vários "controladores", ou seja, comandos pré-prontos para executar determinado tipo de experimento. Assim, se você queria fazer um "julgamento de aceitabilidade", havia um controlador chamado ```AcceptabilityJudgement```. Se queria apresentar uma frase cujas palavras passavam sozinhas após certo tempo, havia um controlador chamado ```FlashSentence```. Se queria fazer uma pergunta, havia um controlador chamado ```Question```, etc. [Clicando aqui você tem acesso a uma lista completa dos controladores do PCIbex](https://doc.pcibex.net/controller/). Fique à vontade para experimentar.
 
 O nosso controlador será ```DashedSentence```, obviamente, após o qual introduziremos a sentença desejada, sempre entre chaves e iniciada pela letra ```s:```: ```{s: "minha sentença aqui entre aspas duplas."}```. Nosso código agora estaria assim (a sentença ```{s: "..."}``` pode tanto aparecer na mesma linha, como abaixo; ou separada em outra linha. Isso não é relevante para o compilador, nesse caso):
 
-```
+{{< highlight js >}}
 newTrial("frase_1",
     newController("DashedSentence", {s: "Essa é a única frase experimental."})
         .center()
@@ -195,7 +206,8 @@ newTrial("frase_1",
         .wait()
         .remove()
       )
-```
+{{< / highlight >}}
+
 Como você já sabe, ```.center``` centralizará nosso elemento na tela; ```.print``` o mostrará na tela e ```.wait``` garantirá que ele ficará aguardando algo ocorrer (como passar o tempo para que ele desapareça). Os novos elementos são:
 
 - ```.log```: esse elemento grava o tempo quando o controlador é iniciado;
@@ -205,7 +217,7 @@ Se você tiver dúvidas sobre qualquer elemento do PCIbex, pode acessar [essa p�
 
 Agora que temos a parte da frase experimental, podemos visualizar o código completo:
 
-```
+{{< highlight js >}}
 PennController.ResetPrefix(null)
 
 newTrial("meuexemplo",
@@ -235,10 +247,11 @@ newTrial("frase_1",
         .wait()
         .remove()
       )
-```
+{{< / highlight >}}
+
 Agora você pode simplesmente copiar e colar esse código no [PCIbex Farm](https://farm.pcibex.net/) e rodar seu experimento. O resultado será um conjunto de dados parecido com esse.
 
-```
+{{< highlight r >}}
 # Last submission only; create an account for full results file
 #
 # Results on Sunday May 02 2021 01:29:12 UTC
@@ -274,7 +287,7 @@ Agora você pode simplesmente copiar e colar esse código no [PCIbex Farm](https
 1619918952,313362cc8a2fca017214b0da440b8033,PennController,1,0,frase_1,NULL,Controller-DashedSentence,DashedSentence,6,experimental.,1619918952641,433,false,Essa é a única frase experimental.,Any addtional parameters were appended as additional columns
 # 13. Comments.
 1619918952,313362cc8a2fca017214b0da440b8033,PennController,1,0,frase_1,NULL,PennController,1,_Trial_,End,1619918952645,NULL
-```
+{{< / highlight >}}
 Se quiser saber como acessar esses dados no R, veja [esse post](https://igordeo-costa.github.io/posts/dadosibex/).
 
 Por enquanto, vamos ficar por aqui. No próximo artigo aprofundaremos mais nossos estudos.

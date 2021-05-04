@@ -15,13 +15,13 @@ No nosso caso, usaremos o ```.csv``` para criar uma tabela com informações sob
 
 Mas, afinal, como criar um arquivo ```.csv```? Que programas você deve usar para isso? Criar uma tabela em formato ```.csv``` é muito simples: basta abrir um editor de textos (como o "Bloco de notas" ou o "WordPad", ambos da Microsoft) e daí digitar os seus dados, sendo que cada coluna da tabela será separada por uma vírgula, como abaixo, onde temos uma tabela com 4 colunas e 5 linhas:
 
-```
+{{< highlight r >}}
 Coluna1,Coluna2,Coluna3,Coluna4
 Dado1,Dado2,Dado3,Dado4
 Dado5,Dado6,Dado7,Dado8
 Dado9,Dado10,Dado11,Dado12
 Dado13,Dado14,Dado15,Dado16
-```
+{{< / highlight >}}
 Mais à frente, quando você estiver trabalhando com tabelas mais complexas, verá que você pode criá-las no Excel e exportá-las como ```.csv```, mas por enquanto não faça isso, pois há algumas configurações que precisam ser feitas paras as coisas funcionarem direito no Excel.
 
 Ah! Não coloque espaço entre os elementos depois da vírgula. Isso pode trazer alguns probleminhas.
@@ -40,13 +40,13 @@ Observe que a nossa tabelinha abaixo não tem acentos ou cedilhas ou qualquer co
 
 ![utf8](/imagem2.png)
 
-```
+{{< highlight r >}}
 group,item,verbo,numero,frase
 A,1,transitivo,sg,A menina comeu o bolo.
 B,1,transitivo,pl,As menina comeu o bolo.
 A,2,transitivo,sg,O lobo mordeu a lebre.
 B,2,transitivo,pl,Os lobo mordeu a lebre.
-```
+{{< / highlight >}}
 Como você pode ver, a nossa tabela tem 5 colunas. E aqui há um ponto importante: as três últimas colunas ("verbo", "numero" e "frase") foram nomeadas por nós, ou seja, você pode dar o nome que quiser para elas; as duas primeiras, no entanto, têm de ser nomeadas "group" e "item" ou o PCIbex não fará o que pedimos. Você pode dar uma olhada na documentação [aqui](https://doc.pcibex.net/advanced-tutorial/8_creating-trial-template.html).
 
 Do modo como essa tabela está organizada, o que acontecerá é o seguinte: um grupo de sujeitos verá as sentenças do tipo A, ou seja, as que estão no singular; e outro grupo verá as sentenças do tipo B, as que estão no plural. Se você quiser, pode pensar na coluna "group" como aquilo que chamamos de "listas", sendo que cada sujeito será automaticamente colocado em uma das duas listas disponíveis. O item e o verbo não serão importantes agora, mas deixemo-los aí para facilitar a nossa vida mais adiante.
@@ -56,7 +56,7 @@ Agora que a nossa tabela está criada, você pode arrastar esse arquivo para a a
 ## Criando o nosso experimento
 Para criar o experimento, vamos usar basicamente a estrutura que fizemos antes, com pequenas modificações. Abaixo está o código completo que usaremos:
 
-```
+{{< highlight js >}}
 PennController.ResetPrefix(null)
 
 newTrial("meuexemplo",
@@ -89,10 +89,11 @@ Template("minhatabela.csv",
             .remove()
             )
         )
-```
+{{< / highlight >}}
+
 Como você deve ter notado, o primeiro trial é idêntico ao da parte 1 do nosso tutorial. A mudança toda agora está no segundo trial. Vamos investigar o esqueleto desse código:
 
-```
+{{< highlight js >}}
 Template(
   exp => newTrial(
         newController()
@@ -103,26 +104,27 @@ Template(
             .remove()
             )
         )
-```
+{{< / highlight >}}
 
 As únicas novidades aí são ```Template``` e ```exp```. O resto você já sabe o que é (se não sabe, volte à [Parte 1]()). Vamos por partes:
 
-```
+{{< highlight js >}}
 Template("minhatabela.csv",
   exp =>
-```
+{{< / highlight >}}
 
 Em ```Template```, incluímos duas coisas: ```"minhatabela.csv"``` e ```exp```. Logo, o que esse ```Template``` está fazendo é, em primeiro lugar, acessando a nossa tabela com as frases experimentais (esse nome colocado entre aspas tem de ser idêntico ao nome do arquivo que você salvou, incluisve com o .csv ao final) e atribuindo essa tabela ao objeto ```exp```. O ```exp``` é uma variável, ou seja, é uma espécie de comando que nós mesmos criamos e, como nós mesmos criamos, podemos dar o nome que quisermos (na [página do PCIbex](https://doc.pcibex.net/advanced-tutorial/8_creating-trial-template.html), eles dão o nome de ```row```. Você pode trocar pelo que quiser ou manter como está.). Essa variável contém (```=>```) tudo que está depois da setinha (o sinal de ```=``` seguido do sinal de maior ```>```). Vamos à segunda parte então:
 
-```
+{{< highlight js >}}
 exp => newTrial("minhasfrases",
       newController("DashedSentence", {s: exp.frase})
-```
+{{< / highlight >}}
+
 A nossa variável ```exp``` contém um ```newTrial```, que recebeu o nome "minhasfrases" (você poderia dar qualquer nome aqui) e, como antes, dentro dele colocamos o controlador para ```DashedSentence```. Dentro desse controlador, no entanto, fizemos uma coisa muito diferente, em vez de colocarmos a nossa sentença experimental depois de ```{s:```, colocamos "exp.frase". Lembre-se de que a última coluna da nossa tabela se chama justamente frase. Mas, afinal, o que o PCIbex está fazendo aqui? Simplemente dizendo: dentro do objeto ```exp``` (que é a tabela ```.csv```), acesse a coluna ```frase``` (que contém as frases experimentais a serem apresentadas pelo controlador ```DashedSentence```).
 
 Feito isso, essa parte do código ficará assim:
 
-```
+{{< highlight js >}}
 Template("minhatabela.csv",
   exp => newTrial("minhasfrases",
         newController("DashedSentence", {s: exp.frase})
@@ -133,12 +135,13 @@ Template("minhatabela.csv",
             .remove()
             )
         )
-```
+{{< / highlight >}}
+
 E seu experimento estará pronto para rodar. Como nós já definimos a coluna ```group```, não precisamos fazer mais nada. O primeiro sujeito que fizer, fará as sentenças do grupo A e o segundo as do grupo B e assim sucessivamente para todos os sujeitos.
 
 O resultados que serão recebidos estão abaixo (para o primeiro sujeito apenas):
 
-```
+{{< highlight r >}}
 # Last submission only; create an account for full results file
 #
 # Results on Sunday May 02 2021 16:42:49 UTC
@@ -185,14 +188,14 @@ O resultados que serão recebidos estão abaixo (para o primeiro sujeito apenas)
 1619973769,313362cc8a2fca017214b0da440b8033,PennController,2,0,minhasfrases,NULL,Controller-DashedSentence,DashedSentence,5,fome.,1619973769412,247,false,O lobo morreu de fome.,Any addtional parameters were appended as additional columns
 # 13. Comments.
 1619973769,313362cc8a2fca017214b0da440b8033,PennController,2,0,minhasfrases,NULL,PennController,2,_Trial_,End,1619973769415,NULL
-```
+{{< / highlight >}}
 
 ## Uma pausa importante para análise dos resultados
 Observe com atenção os dados de resultado que obtivemos. Como você deve ter visto, o experimento funcionou perfeitamente, distribuiu os participantes em grupos corretos e tudo o mais. Mas há um detalhe bem estranho, se você reparar bem. Observe que a coluna ```6. Label``` está preenchida com a expressão "minhasfrases". Isso é muito ruim, pois não nos permite identificar diretamente qual é a condição experimental que está sendo medida em cada caso (é claro que podemos fazer isso olhando frase por frase na coluna ```15. Sentence```, mas isso seria muito trabalhoso). Mas, se você prestou bem atenção, entenderá porque isso acontece e pensará num modo de resolver. Tire um tempinho e tente fazer isso sozinho: o que é preciso mudar no código para que em ```Label``` apareça o ```group``` daquela sentença?
 
 Como você deve ter imaginado, o problema ocorre porque no trecho do código reproduzido abaixo, o elemento que está entrando como Label é a expressão "minhasfrases":
 
-```
+{{< highlight js >}}
 Template("minhatabela.csv",
   exp => newTrial("minhasfrases", // Aqui está o nosso problema
         newController("DashedSentence", {s: exp.frase})
@@ -203,10 +206,11 @@ Template("minhatabela.csv",
             .remove()
             )
         )
-```
+{{< / highlight >}}
+
 Para solucinar, portanto, basta que o compilador acesse a tabela ```.csv``` (que foi armazenada no objeto ```exp```) e inclua a coluna ```group```, exatamente como fizemos com as sentenças dentro do ```newController```. Esse trecho do código então ficará assim:
 
-```
+{{< highlight js >}}
 Template("minhatabela.csv",
   exp => newTrial(exp.group,
         newController("DashedSentence", {s: exp.frase})
@@ -217,21 +221,22 @@ Template("minhatabela.csv",
             .remove()
             )
         )
-```
+{{< / highlight >}}
+
 Com isso, seu resultado agora incluirá o grupo ao qual a sentença pertence na coluna Label. Vai ficar mais ou menos assim (observe que agora a sexta coluna incluiu a letra A no lugar de "minhasfrases"):
 
-```
+{{< highlight r >}}
 1619978534,313362cc8a2fca017214b0da440b8033,PennController,1,0,A,NULL,Controller-DashedSentence,DashedSentence,1,A,1619978532343,279,false,A menina comeu o bolo.,Any addtional parameters were appended as additional columns
 1619978534,313362cc8a2fca017214b0da440b8033,PennController,1,0,A,NULL,Controller-DashedSentence,DashedSentence,2,menina,1619978532343,255,false,A menina comeu o bolo.,Any addtional parameters were appended as additional columns
 1619978534,313362cc8a2fca017214b0da440b8033,PennController,1,0,A,NULL,Controller-DashedSentence,DashedSentence,3,comeu,1619978532343,264,false,A menina comeu o bolo.,Any addtional parameters were appended as additional columns
 1619978534,313362cc8a2fca017214b0da440b8033,PennController,1,0,A,NULL,Controller-DashedSentence,DashedSentence,4,o,1619978532343,249,false,A menina comeu o bolo.,Any addtional parameters were appended as additional columns
 1619978534,313362cc8a2fca017214b0da440b8033,PennController,1,0,A,NULL,Controller-DashedSentence,DashedSentence,5,bolo.,1619978532343,247,false,A menina comeu o bolo.,Any addtional parameters were appended as additional columns
-```
+{{< / highlight >}}
 
-## Brincado com os designs experimentais
+## Brincando com os designs experimentais
 Agora que você já sabe como incluir os itens, você pode começar a fazer brincadeiras simples com o seu desenho experimental. Imagine, por exemplo, que você tenha três conjuntos de frases e não mais dois, como antes. Você pode incluí-las facilmente no seu experimento (sem qualquer alteração no código), apenas acrescentando essas sentenças na tabela ```.csv```:
 
-```
+{{< highlight r >}}
 group,item,verbo,numero,frase
 A,1,transitivo,sg,A menina comeu o bolo.
 B,1,transitivo,pl,As menina comeu o bolo.
@@ -239,12 +244,12 @@ C,1,transitivo,pl red,As meninas comeram o bolo.
 A,2,transitivo,sg,O lobo mordeu a lebre.
 B,2,transitivo,pl,Os lobo mordeu a lebre.
 C,2,transitivo,pl red,Os lobos morderam a lebre.
-```
+{{< / highlight >}}
 Nesse caso, continuamos com um desenho _between subjects_, agora com três grupos (A, B e C, esse para o plural redundante).
 
 Ou você pode ter, digamos, um outro tipo de verbo, como "intransitivo". Repare que mudamos a etiqueta das sentenças para algo mais mnemônico. Nesse caso, teremos 4 grupos de sujeitos, cada qual associado a uma das 4 condições experimentais:
 
-```
+{{< highlight r >}}
 group,item,verbo,numero,frase
 t_sg,1,transitivo,sg,A menina comeu o bolo.
 t_pl,1,transitivo,pl,As menina comeu o bolo.
@@ -254,5 +259,5 @@ t_sg,2,transitivo,sg,O lobo mordeu a lebre.
 t_pl,2,transitivo,pl,Os lobo mordeu a lebre.
 i_sg,2,intransitivo,sg,O lobo morreu de fome.
 i_pl,2,intransitivo,pl,Os lobo morreu de fome.
-```
+{{< / highlight >}}
 Até agora tudo está funcionando bem, mas nosso experimento ainda apresenta os itens na ordem em que eles aparecem na tabela. No próximo tutorial, vamos mostrar como aleatorizá-los um pouco.
