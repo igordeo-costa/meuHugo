@@ -1,9 +1,11 @@
 ---
-title: "Começando do zero no PcIbex - Parte 02"
+title: "Começando do zero no PCIbex - Parte 02"
 date: 2021-05-02T19:05:10-03:00
 tags: ["Ibex Farm", "PCIbex", "Tutorial PCIbex"]
 author: Igor Costa e Ana Paula Jakubów
 ---
+##### Por Igor Costa (LAPAL/PUC-Rio) e Ana Paula Jakubów (LAPAL/PUC-Rio; UERJ)
+
 Na parte 1 do nosso tutorial, que você pode acessar [aqui](https://igordeo-costa.github.io/posts/pcibextutorial01/), mostramos como começar do zero no PCIbex, criando uma página de instruções com um botão clicável e como inserir um único item experimental para um experimento de leitura automonitorada. O problema é que nunca temos um único item experimental, mas vários itens, de vários tipos diferentes. Nessa parte 2, então, vamos mostrar como usar a mesma estrutura básica que já aprendemos para, em vez de inserirmos item a item no código, buscarmos cada um dos itens em uma tabela.
 
 ## Trabalhando com arquivos ```.csv```
@@ -188,49 +190,6 @@ O resultados que serão recebidos estão abaixo (para o primeiro sujeito apenas)
 1619973769,313362cc8a2fca017214b0da440b8033,PennController,2,0,minhasfrases,NULL,Controller-DashedSentence,DashedSentence,5,fome.,1619973769412,247,false,O lobo morreu de fome.,Any addtional parameters were appended as additional columns
 # 13. Comments.
 1619973769,313362cc8a2fca017214b0da440b8033,PennController,2,0,minhasfrases,NULL,PennController,2,_Trial_,End,1619973769415,NULL
-{{< / highlight >}}
-
-## Uma pausa importante para análise dos resultados
-Observe com atenção os dados de resultado que obtivemos. Como você deve ter visto, o experimento funcionou perfeitamente, distribuiu os participantes em grupos corretos e tudo o mais. Mas há um detalhe bem estranho, se você reparar bem. Observe que a coluna ```6. Label``` está preenchida com a expressão "minhasfrases". Isso é muito ruim, pois não nos permite identificar diretamente qual é a condição experimental que está sendo medida em cada caso (é claro que podemos fazer isso olhando frase por frase na coluna ```15. Sentence```, mas isso seria muito trabalhoso). Mas, se você prestou bem atenção, entenderá porque isso acontece e pensará num modo de resolver. Tire um tempinho e tente fazer isso sozinho: o que é preciso mudar no código para que em ```Label``` apareça o ```group``` daquela sentença?
-
-Como você deve ter imaginado, o problema ocorre porque no trecho do código reproduzido abaixo, o elemento que está entrando como Label é a expressão "minhasfrases":
-
-{{< highlight js >}}
-Template("minhatabela.csv",
-  exp => newTrial("minhasfrases", // Aqui está o nosso problema
-        newController("DashedSentence", {s: exp.frase})
-            .center()
-            .print()
-            .log()
-            .wait()
-            .remove()
-            )
-        )
-{{< / highlight >}}
-
-Para solucinar, portanto, basta que o compilador acesse a tabela ```.csv``` (que foi armazenada no objeto ```exp```) e inclua a coluna ```group```, exatamente como fizemos com as sentenças dentro do ```newController```. Esse trecho do código então ficará assim:
-
-{{< highlight js >}}
-Template("minhatabela.csv",
-  exp => newTrial(exp.group,
-        newController("DashedSentence", {s: exp.frase})
-            .center()
-            .print()
-            .log()
-            .wait()
-            .remove()
-            )
-        )
-{{< / highlight >}}
-
-Com isso, seu resultado agora incluirá o grupo ao qual a sentença pertence na coluna Label. Vai ficar mais ou menos assim (observe que agora a sexta coluna incluiu a letra A no lugar de "minhasfrases"):
-
-{{< highlight r >}}
-1619978534,313362cc8a2fca017214b0da440b8033,PennController,1,0,A,NULL,Controller-DashedSentence,DashedSentence,1,A,1619978532343,279,false,A menina comeu o bolo.,Any addtional parameters were appended as additional columns
-1619978534,313362cc8a2fca017214b0da440b8033,PennController,1,0,A,NULL,Controller-DashedSentence,DashedSentence,2,menina,1619978532343,255,false,A menina comeu o bolo.,Any addtional parameters were appended as additional columns
-1619978534,313362cc8a2fca017214b0da440b8033,PennController,1,0,A,NULL,Controller-DashedSentence,DashedSentence,3,comeu,1619978532343,264,false,A menina comeu o bolo.,Any addtional parameters were appended as additional columns
-1619978534,313362cc8a2fca017214b0da440b8033,PennController,1,0,A,NULL,Controller-DashedSentence,DashedSentence,4,o,1619978532343,249,false,A menina comeu o bolo.,Any addtional parameters were appended as additional columns
-1619978534,313362cc8a2fca017214b0da440b8033,PennController,1,0,A,NULL,Controller-DashedSentence,DashedSentence,5,bolo.,1619978532343,247,false,A menina comeu o bolo.,Any addtional parameters were appended as additional columns
 {{< / highlight >}}
 
 ## Brincando com os designs experimentais

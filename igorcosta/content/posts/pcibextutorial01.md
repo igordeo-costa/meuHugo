@@ -4,6 +4,8 @@ date: 2021-05-02T18:33:34-03:00
 tags: ["Ibex Farm", "PCIbex", "Tutorial PCIbex"]
 author: Igor Costa e Ana Paula Jakubów
 ---
+##### Por Igor Costa (LAPAL/PUC-Rio) e Ana Paula Jakubów (LAPAL/PUC-Rio; UERJ)
+
 Este tutorial foi organizado por Igor Costa, com ajuda de Ana Paula Jakubów. Montamos o tutorial com base na nossa experiência com o [PCIbex](https://www.pcibex.net/) - _PennController for Internet Based Experiments_. Nesse sentido, criamos um passo-a-passo para aqueles que nunca viram nada de programação, javascript, ccs, html, etc. antes. Esperamos que ajude no seu experimento. Não somos expert no assunto, mas pretendemos ajudar, de alguma forma, os linguistas brasileiros que trabalham com metodologia experimental.
 
 Dado esse cenário, vamos começar esse post do zero, explicando algumas coisas que talvez sejam óbvias demais, mas que, na nossa experiência, deixam algumas pessoas confusas.
