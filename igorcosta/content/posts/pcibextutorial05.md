@@ -208,10 +208,104 @@ Mas não fique parado aqui olhando para essa tabela: crie um _script_ (ou copie 
 
 Feito isso, basta organizar uma tabela de distratoras, aleatorizar tudo como vimos na [Parte 03](https://igordeo-costa.github.io/posts/pcibextutorial03/) e ser feliz.
 
-Mas ainda não vimos como tomar medidas repetidas dos participantes por condição, ou seja, como fazer para que o mesmo participante seja submetido a vários itens da mesma condição e não a apenas um, como até agora estamos fazendo. Isso, porém, nos levará para além da coluna "group", então, vamos ficar aqui, por enquanto.
+Mas ainda não vimos como tomar medidas repetidas dos participantes por condição, ou seja, como fazer para que o mesmo participante seja submetido a vários itens da mesma condição e não a apenas um, como até agora estamos fazendo.
+
+## Tomando medidas repetidas por condição de cada sujeito
+Vamos ver, então, como submeter o mesmo sujeito a vários itens na mesma condição. Para tanto, vamos tomar apenas as sentenças encaixadas e criar mais 4 itens para esse conjunto de dados, de modo que tenhamos um total de 8 itens experimentais e, portanto, 32 versões de cada item, como abaixo:
+
+{{< highlight r "linenos=table,hl_lines=2 6 10 14 18 22 26 30" >}}
+group,item,encaixamento,verbo,numero,frase
+A,1,encaixada,transitivo,sg,Paulo olhou a menina que comeu o bolo.
+B,1,encaixada,transitivo,pl,Paulo olhou as menina que comeu o bolo.
+C,1,encaixada,intransitivo,sg,Paulo olhou a menina que dormiu cedo.
+D,1,encaixada,intransitivo,pl,Paulo olhou as menina que dormiu cedo.
+A,2,encaixada,transitivo,pl,João beijou os lobo que mordeu a lebre.
+B,2,encaixada,transitivo,sg,João beijou o lobo que mordeu a lebre.
+C,2,encaixada,intransitivo,pl,João beijou os lobo que morreu de fome.
+D,2,encaixada,intransitivo,sg,João beijou o lobo que morreu de fome.
+A,3,encaixada,intransitivo,sg,Taís ajudou o bruxo que caiu da vassoura.
+B,3,encaixada,intransitivo,pl,Taís ajudou os bruxo que caiu da vassoura.
+C,3,encaixada,transitivo,sg,Taís ajudou o bruxo que beijou a coruja.
+D,3,encaixada,transitivo,pl,Taís ajudou os bruxo que beijou a coruja.
+A,4,encaixada,intransitivo,pl,Maria acariciou as gata que chegou tarde.
+B,4,encaixada,intransitivo,sg,Maria acariciou a gata que chegou tarde.
+C,4,encaixada,transitivo,pl,Maria acariciou as gata que bebeu leite.
+D,4,encaixada,transitivo,sg,Maria acariciou a gata que bebeu leite.
+A,5,encaixada,transitivo,sg,Pedro aplaudiu o jogador que virou o jogo.
+B,5,encaixada,transitivo,pl,Pedro aplaudiu os jogador que virou o jogo.
+C,5,encaixada,intransitivo,sg,Pedro aplaudiu o jogador que escorregou no jogo.
+D,5,encaixada,intransitivo,pl,Pedro aplaudiu os jogador que escorregou no jogo.
+A,6,encaixada,transitivo,pl,Lua visitou as freira que alimentou o mendigo.
+B,6,encaixada,transitivo,sg,Lua visitou a freira que alimentou o mendigo.
+C,6,encaixada,intransitivo,pl,Lua visitou as freira que saiu da igreja.
+D,6,encaixada,intransitivo,sg,Lua visitou a freira que saiu da igreja.
+A,7,encaixada,intransitivo,sg,Josemar seduziu a moça que escorregou na poça.
+B,7,encaixada,intransitivo,pl,Josemar seduziu as moça que escorregou na poça.
+C,7,encaixada,transitivo,sg,Josemar seduziu a moça que cantou a música.
+D,7,encaixada,transitivo,pl,Josemar seduziu as moça que cantou a música.
+A,8,encaixada,intransitivo,pl,Juliana atingiu o rapaz que sai do ônibus.
+B,8,encaixada,intransitivo,sg,Juliana atingiu o rapaz que sai do ônibus.
+C,8,encaixada,transitivo,sg,Juliana atingiu o rapaz que chutou o gato.
+D,8,encaixada,transitivo,pl,Juliana atingiu os rapaz que chutou o gato.
+{{< / highlight >}}
+
+ O que fizemos acima pode parecer muito confuso e complexo, mas não é. Observe as marcações do grupo A, que reproduzimos na tabela abaixo:
+
+ |group|verbo|numero|frase|item|
+ |---------|-----|------|-----|----|
+ |A|transitivo|sg|Paulo olhou a menina que comeu o bolo.|1|
+ |A|transitivo|pl|João beijou os lobo que mordeu a lebre.|2|
+ |A|intransitivo|sg|Taís ajudou o bruxo que caiu da vassoura.|3|
+ |A|intransitivo|pl|Maria acariciou as gata que chegou tarde.|4|
+ |A|transitivo|sg|Pedro aplaudiu o jogador que virou o jogo.|5|
+ |A|transitivo|sg|Lua visitou as freira que alimentou o mendigo.|6|
+ |A|intransitivo|sg|Josemar seduziu a moça que escorregou na poça.|7|
+ |A|intransitivo|pl|Juliana atingiu o rapaz que sai do ônibus.|8|
+
+ Agora, se quiser, faça uma tabela semelhante para o Grupo B. Como você pode ver, para organizar rapidamente esse tipo de tabela, basta organizar os itens em ordem crescente (de 1 até 8) e atribuir a todo esse conjunto o Grupo A; em seguida, organize um segundo conjunto de 1 até 8 e atribua o Grupo B; o mesmo para o grupo C e D. No caso, em questão, cada sujeito verá 2 itens em cada uma das 4 condições.
+
+ Se você tiver mais itens, digamos, 12 itens, basta organizá-los em conjuntos de 1 até 12 e aplicar os grupos por conjuntos de itens.
+
+ Abaixo vamos reescrever a mesma tabela acima organizada dessa maneira (observe que ambas funcionam igualmente bem para o PCIbex):
+
+ {{< highlight r "linenos=table,hl_lines=10-17 26-32" >}}
+ group,item,encaixamento,verbo,numero,frase
+ A,1,encaixada,transitivo,sg,Paulo olhou a menina que comeu o bolo.
+ A,2,encaixada,transitivo,pl,João beijou os lobo que mordeu a lebre.
+ A,3,encaixada,intransitivo,sg,Taís ajudou o bruxo que caiu da vassoura.
+ A,4,encaixada,intransitivo,pl,Maria acariciou as gata que chegou tarde.
+ A,5,encaixada,transitivo,sg,Pedro aplaudiu o jogador que virou o jogo.
+ A,6,encaixada,transitivo,pl,Lua visitou as freira que alimentou o mendigo.
+ A,7,encaixada,intransitivo,sg,Josemar seduziu a moça que escorregou na poça.
+ A,8,encaixada,intransitivo,pl,Juliana atingiu o rapaz que sai do ônibus.
+ B,1,encaixada,transitivo,pl,Paulo olhou as menina que comeu o bolo.
+ B,2,encaixada,transitivo,sg,João beijou o lobo que mordeu a lebre.
+ B,3,encaixada,intransitivo,pl,Taís ajudou os bruxo que caiu da vassoura.
+ B,4,encaixada,intransitivo,sg,Maria acariciou a gata que chegou tarde.
+ B,5,encaixada,transitivo,pl,Pedro aplaudiu os jogador que virou o jogo.
+ B,6,encaixada,transitivo,sg,Lua visitou a freira que alimentou o mendigo.
+ B,7,encaixada,intransitivo,pl,Josemar seduziu as moça que escorregou na poça.
+ B,8,encaixada,intransitivo,sg,Juliana atingiu o rapaz que sai do ônibus.
+ C,1,encaixada,intransitivo,sg,Paulo olhou a menina que dormiu cedo.
+ C,2,encaixada,intransitivo,pl,João beijou os lobo que morreu de fome.
+ C,3,encaixada,transitivo,sg,Taís ajudou o bruxo que beijou a coruja.
+ C,4,encaixada,transitivo,pl,Maria acariciou as gata que bebeu leite.
+ C,5,encaixada,intransitivo,sg,Pedro aplaudiu o jogador que escorregou no jogo.
+ C,6,encaixada,intransitivo,pl,Lua visitou as freira que saiu da igreja.
+ C,7,encaixada,transitivo,sg,Josemar seduziu a moça que cantou a música.
+ C,8,encaixada,transitivo,sg,Juliana atingiu o rapaz que chutou o gato.
+ D,1,encaixada,intransitivo,pl,Paulo olhou as menina que dormiu cedo.
+ D,2,encaixada,intransitivo,sg,João beijou o lobo que morreu de fome.
+ D,3,encaixada,transitivo,pl,Taís ajudou os bruxo que beijou a coruja.
+ D,4,encaixada,transitivo,sg,Maria acariciou a gata que bebeu leite.
+ D,5,encaixada,intransitivo,pl,Pedro aplaudiu os jogador que escorregou no jogo.
+ D,6,encaixada,intransitivo,sg,Lua visitou a freira que saiu da igreja.
+ D,7,encaixada,transitivo,pl,Josemar seduziu as moça que cantou a música.
+ D,8,encaixada,transitivo,pl,Juliana atingiu os rapaz que chutou o gato.
+ {{< / highlight >}}
 
 ## Rodando o nosso experimento completo (até aqui)
-Feito isso, já podemos pensar em rodar nossa experimento "completo" (mas apenas por enquanto): ele terá o conjunto acima de frases experimentais e o conjunto abaixo de frases distratoras (como cada lista vê apenas 4 sentenças experimnetais, coloquemos o triplo de distratoras):
+Feito isso, já podemos pensar em rodar nossa experimento "completo" (mas apenas por enquanto): vamos mantê-lo com o conjunto de frases experimentais em que tínhamos encaixadas e não encaixadas como fator _between_ (não esse último que vimos, mas o anterior) e o conjunto abaixo de frases distratoras (como cada lista vê apenas 4 sentenças experimentais, coloquemos o triplo de distratoras):
 
 {{< highlight r "linenos=table,hl_lines=18-33" >}}
 group,frase
