@@ -6,14 +6,14 @@ author: Igor Costa e Ana Paula Jakubów
 ---
 ##### Por Igor Costa (LAPAL/PUC-Rio) e Ana Paula Jakubów (LAPAL/PUC-Rio; UERJ)
 
-Este tutorial foi organizado por Igor Costa, com ajuda de Ana Paula Jakubów. Montamos o tutorial com base na nossa experiência com o [PCIbex](https://www.pcibex.net/) - _PennController for Internet Based Experiments_. Nesse sentido, criamos um passo-a-passo para aqueles que nunca viram nada de programação, javascript, ccs, html, etc. antes. Esperamos que ajude no seu experimento. Não somos expert no assunto, mas pretendemos ajudar, de alguma forma, os linguistas brasileiros que trabalham com metodologia experimental.
+Este tutorial foi organizado por Igor Costa, com ajuda de Ana Paula Jakubów. Montamos o tutorial com base na nossa experiência com o [PCIbex](https://www.pcibex.net/) - _PennController for Internet Based Experiments_. Nesse sentido, criamos um passo-a-passo para aqueles que nunca viram nada de programação, ```javascript```, ```ccs```, ```html```, etc. Esperamos que ajude no seu experimento. Não somos experts no assunto, mas pretendemos ajudar, de alguma forma, os linguistas brasileiros que trabalham com metodologia experimental.
 
 Dado esse cenário, vamos começar esse post do zero, explicando algumas coisas que talvez sejam óbvias demais, mas que, na nossa experiência, deixam algumas pessoas confusas.
 
 ## Linha de comando e Linha de comentário
-Uma linha de comando é um código executável, que faz uma tarefa, digamos, gravar um tempo de reação, apresentar uma frase na tela, centralizar um elemento, etc.; e uma _linha de comentário_ é uma linha visível para o leitor do _script_ (você), mas não para o compilador. Assim, uma linha de comentário não executa nenhuma tarefa. Ela é apenas um comentário explicando um trecho do código, dando uma dica, etc.
+Uma linha de comando é um código executável, ou seja, um código que realiza uma tarefa, digamos, gravar um tempo de reação, apresentar uma frase na tela, centralizar um elemento, etc.; e uma _linha de comentário_ é uma linha visível para o leitor do _script_ (você), mas não para o programa. Assim, uma linha de comentário não executa nenhuma tarefa. Ela é apenas um comentário explicando um trecho do código, dando uma dica, etc.
 
-Nos _scripts_ do PCIbex, uma linha de comentário é sempre precedida de duas barras ```//```. Assim sendo, no trecho abaixo, tudo que está depois das duas barras não é lido pelo compilador, podendo ser apagado livremente sem alterar em nada o funcionamento do código:
+Nos _scripts_ do PCIbex, uma linha de comentário é sempre precedida de duas barras ```//``` (Esse é, na verdade, o modo de fazer comentários na linguagem ```javascript```). Assim sendo, no trecho abaixo, tudo que está depois das duas barras **não é lido** pelo programa, podendo ser apagado livremente sem alterar em nada o funcionamento do código:
 
 {{< highlight js >}}
 newTrial("meuexemplo", // controla a primeira "página" do experimento
@@ -22,11 +22,11 @@ newTrial("meuexemplo", // controla a primeira "página" do experimento
         .print() // mostra o elemento na tela
 {{< / highlight >}}
 
-Um outro modo de colocar trechos não lidos pelo compilador é inserindo blocos inteiros de comentários, o que é feito com o seguinte código ```/* comentário aqui */```. Desse modo, tudo que estiver entre os símbolos da barra e do asterisco (no caso em questão, a frase "comentário aqui") não será lido pelo compilador.
+Um outro modo de colocar trechos não lidos pelo programa é inserindo blocos inteiros de comentários, o que é feito com o seguinte código ```/* comentário aqui */```. Desse modo, tudo que estiver entre os símbolos da barra e do asterisco (no caso em questão, a frase "comentário aqui") não será lido pelo compilador.
 
-Essa é uma boa ferramenta para testar trechos de códigos, para verificar se funcionam ou não. Em vez de apagar o trecho que funciona, você apenas o comenta e escreve o trecho novo. Se este não funcionar, você não perde o trecho antigo, precisando apenas "descomentá-lo" para o seu _script_ voltar ao normal.
+Essa é uma boa ferramenta para testar trechos de códigos, para verificar se funcionam ou não, por exemplo. Em vez de apagar o trecho que funciona, você apenas o comenta e escreve o trecho novo. Se este não funcionar, você não perde o trecho antigo, precisando apenas "descomentá-lo" para o seu _script_ voltar ao normal.
 
-Repare, portanto, que vamos usar os comentários com o seguinte código ```//``` para explicar o que as linhas de comando executam.
+Repare, portanto, que vamos usar os comentários (introduzidos pelas duas barras ```//```) para explicar o que as linhas de comando executam.
 
 ## Meu primeiro experimento com PCIbex: leitura automonitorada
 Vamos começar por um experimento de leitura automonitorada (_self-paced reading_) muito simples, com apenas uma sentença.
@@ -54,7 +54,7 @@ newTrial("meuexemplo", // é um comando, trial, que controla a primeira "página
     // <br> é uma tag html para "pular linha" (do inglês "break" ou "quebra de linha");
     // <br><br> pula duas linhas, etc.
     // cria um novo elemento de texto com os possíveis argumentos: ("nome do texto", "texto que quero que apareça na tela")
-    // OBS: Por que dar nome aos objetos? O primeiro argumento é a possibilidade de dar o nome para seu objeto, caso você queira utilizá-lo novamente em outro momento do experimento sem digitar todo os códigos novamente. Voltaremos a essa observação em outro momento.
+    // OBS: Por que dar nome aos objetos? O primeiro argumento é a possibilidade de dar um "nome" para seu objeto, caso você queira utilizá-lo ou referenciá-lo novamente em outro momento do experimento sem digitar todo os códigos de novo. Voltaremos a essa observação mais à frente.
 
     newText("Aperte a barra de espaço para ler as frases. <br><br> Seu tempo de leitura estará sendo medido.")
 
@@ -66,7 +66,7 @@ newTrial("meuexemplo", // é um comando, trial, que controla a primeira "página
     newButton("meubotao", "Sim!") //cria um botão com os seguintes argumentos: ("nome do botão", "texto que deve aparecer no botão")
         .center()
         .print()
-        .wait() // indica que o experimento será pausado até que o participante execute uma ação, neste caso, presssionar o botão.
+        .wait() // indica que o experimento será pausado até que o participante execute uma ação, neste caso, pressionar o botão.
 )
 {{< / highlight >}}
 
@@ -161,7 +161,7 @@ newTrial("meuexemplo",
 
 ### Acrescentando um único item experimental
 
-Agora que já fizemos a nossa página de instruções (Veja bem, mais à frente, vamos incrementar esse código, colocando mais informações nele. Por enquanto estamos apenas firmando as fundações do nosso projeto.), vamos inserir um item experimental, ou seja, uma frase que apareça na tela para ser lida pelo participante do experimento palavra por palavra, de modo que o próprio participante controle essa passagem apertando a barra de espaço do teclado.
+Agora que já fizemos a nossa página de instruções (Veja bem... mais à frente vamos incrementar esse código, colocando mais informações nele. Por enquanto estamos apenas firmando as fundações do nosso projeto), vamos inserir um item experimental, ou seja, uma frase que apareça na tela para ser lida pelo participante do experimento palavra por palavra, de modo que o próprio participante controle essa passagem apertando a barra de espaço do teclado.
 
 Assim sendo, vamos acrescentar ao código acima o seguinte trecho:
 
@@ -171,7 +171,7 @@ Assim sendo, vamos acrescentar ao código acima o seguinte trecho:
 // Agora uma sentença experimental
 newTrial("frase_1", // controla a segunda "página" do experimento
     newController("DashedSentence",
-        {s: "Essa é a única frase experimental."}) //[Ana] o tipo de experimento é leitura autominitorada, "DashedSentence" no PCIbex e há uma sentença ({s: "sentença que quero que o participante leia"}) a ser lida pelo participante item por item
+        {s: "Essa é a única frase experimental."}) // o tipo de experimento é leitura automonitorada, denominada "DashedSentence" no PCIbex, e há uma sentença ({s: "sentença que quero que o participante leia"}) a ser lida pelo participante item por item.
         .center()
         .print()
         .log() //armazena informação relativa ao tempo de resposta
@@ -197,7 +197,7 @@ Como você já pôde notar, agora temos apenas dois elementos principais, ```new
 
 Se você já usava o [Ibex Farm](https://spellout.net/ibexfarm), a versão antiga do PCIbex, lembrará certamente que lá havia vários "controladores", ou seja, comandos pré-prontos para executar determinado tipo de experimento. Assim, se você queria fazer um "julgamento de aceitabilidade", havia um controlador chamado ```AcceptabilityJudgement```. Se queria apresentar uma frase cujas palavras passavam sozinhas após certo tempo, havia um controlador chamado ```FlashSentence```. Se queria fazer uma pergunta, havia um controlador chamado ```Question```, etc. [Clicando aqui você tem acesso a uma lista completa dos controladores do PCIbex](https://doc.pcibex.net/controller/). Fique à vontade para experimentar.
 
-O nosso controlador será ```DashedSentence```, obviamente, após o qual introduziremos a sentença desejada, sempre entre chaves e iniciada pela letra ```s:```: ```{s: "minha sentença aqui entre aspas duplas."}```. Nosso código agora estaria assim (a sentença ```{s: "..."}``` pode tanto aparecer na mesma linha, como abaixo; ou separada em outra linha. Isso não é relevante para o compilador, nesse caso):
+O nosso controlador será ```DashedSentence```, obviamente, após o qual introduziremos a sentença desejada, sempre entre chaves e iniciada pela letra ```s:```, assim: ```{s: "minha sentença aqui entre aspas duplas."}```. Nosso código agora estaria desse modo (a sentença ```{s: "..."}``` pode tanto aparecer na mesma linha, como abaixo; ou separada em outra linha, como estava na versão acima. Isso não é relevante para o compilador, nesse caso):
 
 {{< highlight js >}}
 newTrial("frase_1",
@@ -213,7 +213,7 @@ newTrial("frase_1",
 Como você já sabe, ```.center``` centralizará nosso elemento na tela; ```.print``` o mostrará na tela e ```.wait``` garantirá que ele ficará aguardando algo ocorrer (como passar o tempo para que ele desapareça). Os novos elementos são:
 
 - ```.log```: esse elemento grava o tempo quando o controlador é iniciado;
-- ```.remove```: [Igor] esse elemento remove a frase da tela e passa para a próxima.
+- ```.remove```: esse elemento remove a frase da tela e passa para a próxima.
 
 Se você tiver dúvidas sobre qualquer elemento do PCIbex, pode acessar [essa página](https://doc.pcibex.net/elements/), onde todos são explicados pelos autores do projeto.
 
@@ -292,4 +292,4 @@ Agora você pode simplesmente copiar e colar esse código no [PCIbex Farm](https
 {{< / highlight >}}
 Se quiser saber como acessar esses dados no R, veja [esse post](https://igordeo-costa.github.io/posts/dadosibex/).
 
-Por enquanto, vamos ficar por aqui. No próximo artigo aprofundaremos mais nossos estudos.
+Por enquanto, vamos ficar por aqui. No [próximo artigo](https://igordeo-costa.github.io/posts/pcibextutorial02/) aprofundaremos mais nossos estudos.
