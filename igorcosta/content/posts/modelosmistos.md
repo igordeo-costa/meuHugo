@@ -13,4 +13,4 @@ Fato é que parece haver, mesmo em 2021, certa resistência a tais modelos, frut
 
 - A segunda parte trata dos conceitos basilares por trás dos modelos mistos, aplicando passo a passo um modelo desse tipo a dados reais bem simples. [O PDF desse material pode ser baixado aqui.](https://github.com/igordeo-costa/Modelos-Mistos-com-R/raw/master/ModelosMistos.pdf)
 
-**Importante:** esse material não busca ensinar a implementação dos modelos mistos, mas simplesmente a compreensão desses modelos. Se você quiser aprender a implementar, não há material melhor do que o da professora Mahayana Godoy, linkado acima.
+**Importante:** esse material não busca ensinar a implementação dos modelos mistos, mas simplesmente a compreensão desses modelos. Se você quiser aprender a implementar, não há [material melhor do que o da professora Mahayana Godoy](https://mahayana.me/mlm/).
