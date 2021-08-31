@@ -6,17 +6,21 @@ title: "Atuação"
 - [Costa (2013)](https://www.maxwell.vrac.puc-rio.br/colecao.php?strSecao=resultado&nrSeq=23890@2): Trabalho sobre gramática e processamento de verbos meteorológicos no plural em orações relativas (v.g. *os lugares que chovem demais*).
 
 # Artigos
-- [Costa, Augusto & Rodrigues (2016)](https://periodicos.ufjf.br/index.php/veredas/article/view/24982)
+- [Costa, Augusto & Rodrigues (2016)](https://periodicos.ufjf.br/index.php/veredas/article/view/24982). Verbos meteorológicos flexionados no plural e a hipótese da inacusatividade biargumental: explorando a sintaxe do Português Brasileiro.
 
-- [Augusto, Rodrigues & Costa (2020)](https://books.google.it/books/about/Language_Acquisition_Processing_and_Bili.html?id=urzxDwAAQBAJ&redir_esc=y)
+- [Augusto, Rodrigues & Costa (2020)](https://books.google.it/books/about/Language_Acquisition_Processing_and_Bili.html?id=urzxDwAAQBAJ&redir_esc=y). "Topic-subject" structure and agreement with wether verbs within relative clauses: Experimental evidence from adult and children brazilian portuguese speakers.
 
 # Outras atuações
 
-- Um [bate-papo sobre Modelos Lineares Mistos](https://www.youtube.com/watch?v=nQ7l9sSEWgY&t=2792s) -- Grupo de Trabalho do Laboratório ACESIN -- PPG-Ling/UFRJ -- Jul/2020 (palestra);
+- Modelos lineares mistos aplicados à Psicolinguística Experimental: uma introdução -- [Núcleo de Estudos em Aquisição da Linguagem e Psicolinguística -- NEALP/UFJF](https://www.ufjf.br/nealp/) -- Ago/2021 (palestra);
+
+- Modelos lineares mistos: o quê, como e por quê? -- Laboratório de Psicolinguística e Aquisição da Linguagem -- LAPAL/PUC-Rio - Jul/2021 (palestra);
+
+- Um [bate-papo sobre Modelos Lineares Mistos](https://www.youtube.com/watch?v=nQ7l9sSEWgY&t=2792s) -- Grupo de Trabalho do [Laboratório de Acesso Sintático -- ACESIN/UFRJ](http://www.acesin.letras.ufrj.br/) -- Jul/2020 (palestra);
 
 - Uma introdução aos Modelos Lineares Mistos com o uso do R -- LAPAL/PUC-Rio -- Dez/2019 (Curso de verão);
 
-- Membro do Conselho Editorial da Revista Roseta (2019);
+- Membro do Conselho Editorial da [Revista Roseta](http://www.roseta.org.br/sobre/) (2019);
 
 - [Enchendo Linguística](https://www.youtube.com/channel/UCB-6vpF2TxHJE7gQ3fktzVw), canal do Youtube de divulgação científica sobre linguística;
 
