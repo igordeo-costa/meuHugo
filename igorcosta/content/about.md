@@ -2,16 +2,20 @@
 title: "Atuação"
 ---
 
-# Dissertação de mestrado
-- [Costa (2013)](https://www.maxwell.vrac.puc-rio.br/colecao.php?strSecao=resultado&nrSeq=23890@2): Trabalho sobre gramática e processamento de verbos meteorológicos no plural em orações relativas (v.g. *os lugares que chovem demais*).
+## Dissertação e Tese
+- Costa (em processo de conclusão). Estruturas distributivas em Português Brasileiro: aspectos linguísticos e processuais.
 
-# Artigos
+- [Costa (2013)](https://www.maxwell.vrac.puc-rio.br/colecao.php?strSecao=resultado&nrSeq=23890@2): Verbos meteorológicos no plural em orações relativas do Português Brasileiro: gramática e processamento.
+
+## Artigos
 - [Costa, Augusto & Rodrigues (2016)](https://periodicos.ufjf.br/index.php/veredas/article/view/24982). Verbos meteorológicos flexionados no plural e a hipótese da inacusatividade biargumental: explorando a sintaxe do Português Brasileiro.
 
 - [Augusto, Rodrigues & Costa (2020)](https://books.google.it/books/about/Language_Acquisition_Processing_and_Bili.html?id=urzxDwAAQBAJ&redir_esc=y). "Topic-subject" structure and agreement with wether verbs within relative clauses: Experimental evidence from adult and children brazilian portuguese speakers.
 
-# Outras atuações
+## Materiais Didáticos
+- Apostila introdutória [Modelos Lineares Mistos Aplicados à Psicolinguística Experimental](https://igordeo-costa.github.io/posts/modelosmistos/) -- Material em construção.
 
+## Outras atuações
 - Modelos lineares mistos aplicados à Psicolinguística Experimental: uma introdução -- [Núcleo de Estudos em Aquisição da Linguagem e Psicolinguística -- NEALP/UFJF](https://www.ufjf.br/nealp/) -- Ago/2021 (palestra);
 
 - Modelos lineares mistos: o quê, como e por quê? -- Laboratório de Psicolinguística e Aquisição da Linguagem -- LAPAL/PUC-Rio - Jul/2021 (palestra);
