@@ -32,4 +32,4 @@ title: "Atuação"
 
 ## Laboratórios de Psicolinguística do Brasil
 
-<iframe seamless src="/static/LabsDoBrasil.html" width="100%" height="500"></iframe>
+<iframe seamless src="/static/LabsDoBrasil/index.html" width="100%" height="500"></iframe>
