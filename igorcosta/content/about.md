@@ -29,3 +29,8 @@ title: "Atuação"
 - [Enchendo Linguística](https://www.youtube.com/channel/UCB-6vpF2TxHJE7gQ3fktzVw), canal do Youtube de divulgação científica sobre linguística;
 
 - Professor substituto do Departamento de Estudos da Linguagem -- UERJ -- 2013/2014, tendo lecionado: Linguística I -- Fundamentos Teóricos; Linguística III -- Língua e sociedade; Linguística IV -- Língua e cognição; e Linguística Aplicada ao Ensino de Língua Materna.
+
+# Laboratórios do Brasil
+Dados compilados por [Rafael Beraldo](https://github.com/rberaldo) e gráfico feito por mim:
+
+<iframe width="100%" height="500" name="iframe" src="/LabsDoBrasil.html"></iframe>

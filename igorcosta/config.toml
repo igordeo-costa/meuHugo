@@ -32,7 +32,7 @@ paginate = 8
     icon = "github"
     name = "Github"
     url = "https://github.com/igordeo-costa"
-  
+
  [markup]
   [markup.highlight]
     anchorLineNos = false
@@ -46,4 +46,5 @@ paginate = 8
     noClasses = true
     style = "xcode"
     tabWidth = 4
-
+  [markup.goldmark.renderer]
+    unsafe = true
