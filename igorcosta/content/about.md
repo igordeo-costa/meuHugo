@@ -16,13 +16,15 @@ title: "Atuação"
 - Apostila introdutória [Modelos Lineares Mistos Aplicados à Psicolinguística Experimental](https://igordeo-costa.github.io/posts/modelosmistos/) -- Material em construção.
 
 ## Outras atuações
+- Poder estatístico: uma abordagem compreensiva -- [Laboratório de Psicolinguística e Aquisição da Linguagem da PUC-Rio -- LAPAL/PUC-Rio](https://www.lapal.letras.puc-rio.br/) -- Set/2021 (palestra para os membros do Laboratório);
+
 - Modelos lineares mistos aplicados à Psicolinguística Experimental: uma introdução -- [Núcleo de Estudos em Aquisição da Linguagem e Psicolinguística -- NEALP/UFJF](https://www.ufjf.br/nealp/) -- Ago/2021 (palestra);
 
-- Modelos lineares mistos: o quê, como e por quê? -- Laboratório de Psicolinguística e Aquisição da Linguagem -- LAPAL/PUC-Rio - Jul/2021 (palestra);
+- Modelos lineares mistos: o quê, como e por quê? -- [Laboratório de Psicolinguística e Aquisição da Linguagem da PUC-Rio -- LAPAL/PUC-Rio](https://www.lapal.letras.puc-rio.br/) -- Jul/2021 (palestra);
 
 - Um [bate-papo sobre Modelos Lineares Mistos](https://www.youtube.com/watch?v=nQ7l9sSEWgY&t=2792s) -- Grupo de Trabalho do [Laboratório de Acesso Sintático -- ACESIN/UFRJ](http://www.acesin.letras.ufrj.br/) -- Jul/2020 (palestra);
 
-- Uma introdução aos Modelos Lineares Mistos com o uso do R -- LAPAL/PUC-Rio -- Dez/2019 (Curso de verão);
+- Uma introdução aos Modelos Lineares Mistos com o uso do R -- [Laboratório de Psicolinguística e Aquisição da Linguagem da PUC-Rio -- LAPAL/PUC-Rio](https://www.lapal.letras.puc-rio.br/) -- Dez/2019 (Curso de verão);
 
 - Membro do Conselho Editorial da [Revista Roseta](http://www.roseta.org.br/sobre/) (2019);
 
