@@ -1,11 +1,14 @@
 #!/bin/sh
 
+# Para o deploy se algum comando falhar
 set -e
 
 printf "\033[0;32mGerando site...\033[0m\n"
 
+# Construindo o site
 hugo -t "m10c"
 
+# Adicionando as atualizações ao repositório principal
 printf "\033[0;32mEnviando atualizações ao GitHub...\033[0m\n"
 
 git add .
@@ -18,13 +21,8 @@ fi
 git commit -m "$msg" 
 git push origin master
 
-printf "\033[0;32mTornado as atualizações públicas...\033[0m\n"
-
+# Tornando as atualizações públicas no blog
 cd public/
-
-printf "\033[0;32mEnviando atualizações ao GitHub...\033[0m\n"
-
 git add .
 git commit -m "$msg"
 git push origin main
-
