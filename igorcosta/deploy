@@ -1,0 +1,17 @@
+#!/bin/sh
+
+set -e
+
+printf "\033[0;32mEnviando atualizações ao GitHub...\033[0m\n"
+
+hugo -t "m10c"
+
+git add .
+
+
+msg="reconstruindo site $(date)"
+if [ -n "$*" ]; then
+	msg="$*"
+fi
+
+git commit -m "$msg" 
