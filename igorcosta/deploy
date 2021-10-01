@@ -2,12 +2,13 @@
 
 set -e
 
-printf "\033[0;32mEnviando atualizações ao GitHub...\033[0m\n"
+printf "\033[0;32mGerando site...\033[0m\n"
 
 hugo -t "m10c"
 
-git add .
+printf "\033[0;32mEnviando atualizações ao GitHub...\033[0m\n"
 
+git add .
 
 msg="reconstruindo site $(date)"
 if [ -n "$*" ]; then
@@ -15,7 +16,15 @@ if [ -n "$*" ]; then
 fi
 
 git commit -m "$msg" 
-
 git push origin master
 
+printf "\033[0;32mTornado as atualizações públicas...\033[0m\n"
+
+cd public/
+
+printf "\033[0;32mEnviando atualizações ao GitHub...\033[0m\n"
+
+git add .
+git commit -m "$msg"
+git push origin main
 
