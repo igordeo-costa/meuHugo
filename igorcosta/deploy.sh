@@ -8,9 +8,8 @@ printf "\033[0;32mGerando site...\033[0m\n"
 # Construindo o site
 hugo -t "m10c"
 
-# Adicionando as atualizações ao repositório principal
 printf "\033[0;32mEnviando atualizações ao GitHub...\033[0m\n"
-
+# Adicionando as atualizações ao repositório principal
 git add .
 
 msg="reconstruindo site $(date)"
