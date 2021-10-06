@@ -89,7 +89,7 @@ ggplot() +
   geom_vline(aes(xintercept = 0.05), color = "red", linetype = "dashed") +
   geom_text(data = poder, aes(label = poder, x = 0.05, y = 0.2)) +
   theme_classic() +
-  labs(x = "p-valor", y = "Density")
+  labs(x = "p-valor", y = "Densidade")
 }
 {{< / highlight >}}
 
@@ -154,7 +154,7 @@ poder.paired(n = 30,
              nsims = 1000)
 {{< / highlight >}}
 
-![Imagem2](/img_poder/img3.png)
+![Imagem3](/img_poder/img3.png)
 
 Nesse caso, com um efeito maior, mais testes obtêm resultados positivos, agora próximo dos 100%. Aumentando o tamanho do efeito, aumenta-se o poder.
 
@@ -209,7 +209,22 @@ poder.paired(n = 60,
 
 Observe que, com isso, há uma redução do poder do teste. Se há muita variabilidade nos dados (proporcionalmente ao tamanho do efeito), então temos mais dificuldade de encontrar um efeito significativo, mesmo quando ele existe na população.
 
-Você pode ver isso facilmente se comparar os gráficos abaixo. Em ambos os casos, temos distribuições com a mesma diferença: uma unidade. A distribuição laranja tem média zero e a distribuição vermelha tem média um. Contudo, neste primeiro gráfico, o desvio padrão de ambas as distribuições é igual a um, de modo que elas se soprepõem em grande parte. Encontrar esse efeito, portanto, é bem difícil, daí ser necessário uma amostra maior para isso.
+O contrário ocorre se reduzimos o desvio padrão, digamos, para a metade do que estava antes (de 40 para 20). E vamos reduzir também o tamanho da amostra, para 10, como no Exemplo 4, em que tínhamos cerca de 20% de poder.
+
+{{< highlight r >}}
+poder.paired(n = 10, # Estamos comparando com o exemplo 4!!!
+             mu1 = 150,
+             mudiff = 20,
+             sigma1 = 20, # Agora mudamos aqui, mas reduzindo, dessa vez.
+             sigma2 = 20, # Aqui também.
+             rho12 = 0.3,
+             nsims = 1000)
+{{< / highlight >}}
+![Imagem7](/img_poder/img7.png)
+
+Nesse caso, o poder passou de cerca de 20% no exemplo 4 para cerca de 65% agora.
+
+Você pode ver facilmente por que isso ocorre se comparar os gráficos abaixo. Em ambos os casos, temos distribuições com a mesma diferença: uma unidade: a distribuição laranja tem média zero (0) e a distribuição vermelha tem média um (1). Contudo, neste primeiro gráfico, o desvio padrão de ambas as distribuições é igual a um (1), de modo que elas se soprepõem em grande parte. Encontrar esse efeito, portanto, é bem difícil, daí ser necessário uma amostra maior para isso.
 
 {{< highlight r >}}
 require(ggplot2)
@@ -227,7 +242,7 @@ ggplot(data = data.frame(x = c(-3, 3)), aes(x)) +
 
 ![ImagemX](/img_poder/imgX.png)
 
-Neste segundo caso, reduzimos o desvio padrão em um quarto (de 1 para 0.25), de modo que as distribuições quase não se sobrepõem. Assim sendo, apesar de a diferença entre elas continuar sendo a mesma, ficou muito mais fácil achar um efeito aqui, de modo que precisamos de uma amostra menor para isso.
+Neste segundo caso, reduzimos o desvio padrão em um quarto (de 1 para 0.25), de modo que as distribuições quase não se sobrepõem. Assim sendo, apesar de a diferença entre elas continuar sendo a mesma (1), ficou muito mais fácil achar um efeito aqui, de modo que precisamos de uma amostra menor para isso.
 
 {{< highlight r >}}
 ggplot(data = data.frame(x = c(-3, 3)), aes(x)) +
@@ -243,23 +258,7 @@ ggplot(data = data.frame(x = c(-3, 3)), aes(x)) +
 
 ![ImagemY](/img_poder/imgY.png)
 
-### Exemplo 7: menor desvio padrão
-Agora deixemos tudo como o Exemplo 4, mas reduzamos em 1/2 o desvio padrão de ambos os grupos (de 40 para 20).
-
-{{< highlight r >}}
-poder.paired(n = 10, # Estamos comparando com o exemplo 4!!!
-             mu1 = 150,
-             mudiff = 20,
-             sigma1 = 20, # Agora mudamos aqui, mas reduzindo, dessa vez.
-             sigma2 = 20, # Aqui também.
-             rho12 = 0.3,
-             nsims = 1000)
-{{< / highlight >}}
-![Imagem7](/img_poder/img7.png)
-
-Nesse caso, o poder passou de cerca de 20% no exemplo 4 para 60% agora.
-
-### Exemplo 8: O poder do teste e o nível de significância
+### Exemplo 7: O poder do teste e o nível de significância
 
 Vamos fazer uma pequena mudança na nossa função e acrescentar mais um argumento a ela, o parâmetro alpha, de modo que possamos brincar com o nível de significância.
 
@@ -308,7 +307,7 @@ ggplot() +
   geom_vline(aes(xintercept = alpha), color = "blue", linetype = "dashed") +
   geom_text(data = poder, aes(label = poder, x = alpha*1.5, y = 0.2), color = "blue") +
   theme_classic() +
-  labs(x = "p-valor", y = "Density")
+  labs(x = "p-valor", y = "Densidade")
 }
 {{< / highlight >}}
 
